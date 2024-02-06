@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.sparse as sps
+from scipy.fft import fft, fftfreq
 
 plt.close("all")
 
@@ -11,29 +12,95 @@ def B_mat(N,h):
     I = sps.eye(N,format = "csr", dtype = float)
     return (-sproll(I,2) + 2*sproll(I,1) - 2*sproll(I,-1) + sproll(I,-2))/(2*h**3)
 
+
+
+"""Données relative à la discrétisation du Tore"""
+
 a = 0; b = 2*np.pi 
-N = 1000
+N = 200
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
+
+
+"""Données relative a la FFT"""
+
+xfreq = fftfreq(N,1/N)
+
+
+
 """Construction des matrices intervenant dans la boucle"""
+
 B = B_mat(N,h)
 I = sps.eye(N,format = "csr", dtype = float)
 
+
+
 """Construction des données initiales et des paramètres d'évolution en temps"""
-U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
+
+#U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
+#U = np.sin(10 * X)
+U = 6 * np.exp(-100*(np.cos(X/2))**2)
 T = 10; dt = 1e-3 ; t = 0
+
+
 
 """Execution de la boucle"""
 while t<T:
-    #U = sps.linalg.spsolve(I + dt * B,  U) # Formulation implicite
-    U = sps.linalg.spsolve(I + dt/2 * B,  U - dt/2 * B.dot(U))  # Formulation Crank Nichloson.
+  
+    
+    
+    """Affichage de U au temps t"""
     
     plt.figure(0)
+    plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
     plt.clf()
     plt.plot(X,U)
-    plt.title("t = "+str(t))
+    plt.ylim(-6,6)
+    plt.title("U(x,t) au temps t = "+str(round(t,2)))
+    plt.xlabel("x")
     plt.show()
     plt.pause(0.01)
+    
+    
+    
+    """Calcul du prochain U"""
+    
+    #Unew = sps.linalg.spsolve(I + dt * B,  U) # Formulation implicite
+    Unew = sps.linalg.spsolve(I + dt/2 * B,  U - dt/2 * B.dot(U))  # Formulation Crank Nichloson.
+    
+    
+    """Affichage des données de la transformée de fourrier de la dérivée en temps."""
+    
+    
+    y = fft(U)*h/np.pi
+    
+    
+    plt.figure(1)
+    plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
+    plt.clf()
+    plt.ylim(-1,1)
+    plt.title("Transformée de fourier")
+    plt.plot(xfreq[:N//2], np.real(y[:N//2]),"b", label= "Re(Û)") #la fonction étant réelle, sa FFT est une fonction paire. On ne regardera alors que la restriction à R+ de cette fonction.
+    plt.plot(xfreq[:N//2], np.imag(y[:N//2]),"r", label= "Im(Û)") 
+    plt.plot(xfreq[:N//2], np.abs(y[:N//2]),"k", label= "|Û|")
+    plt.xlabel("$\\xi $")
+    plt.legend()
+    plt.show()
+    plt.pause(0.01)
+    
+    plt.figure(2) #On se propose de regarder la vitesse de rotation de chaque Û(x) au cours du temps. Autrement dit, on regarde la  dérivée de arg(Û) par rapport au temps.
+    plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
+    plt.clf()
+    plt.title("Dérivée temporelle du déphasage en fonction de la fréquence (en rad/s), au temps t="+str(round(t,2)) )
+    plt.plot(xfreq[:N//5], np.angle(fft(U)[:N//5]/fft(Unew)[:N//5])/dt) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    plt.xlabel("$\\xi $")
+    plt.show()
+    
+    """Actualisation de U et de t"""
+    U = np.copy(Unew)
+    t+=dt
+
+    
 
 
     
