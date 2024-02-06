@@ -1,7 +1,12 @@
-J'ai implémenté les équation de Airy sous python, (KdV sans transport). 
-J'y ai affiché U en fonction du temps, sa transformée de fourier Û (partie reel, partie imaginaire, module), 
-ainsi que la dérivée de l'argument de Û par rapport au temps. C'est une implémentation de type CrankNicholson.
+J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'ai utilisé un schéma de type Crank-Nicholson,
+avec pour l'opérateur de dispersion d_{xxx} une matrice B antisymétrique car cela apporte une conservation de la norme L².
+J'y ai affiché:
+	- U en fonction du temps
+	- Û (la transformée de fourier de U) en fonction du temps (partie reel, partie imaginaire, module)
+	- La dérivée de l'argument de Û par rapport au temps (i.e. la dérivée du déphasage de chaque Harmonique)
 
 J'ai ensuite implémenté KdV à partir du code précédent, en y ajoutant le terme ( u^2 )_x. 
 J'ai implémenté un schéma de type Crank Nicholson en effectuant une méthode de point fixe pour gerer le terme non linéaire.
+J'y ai affiché la même chose que précédemment mais je ne pense pas que regarder le déphasage provoqué par le terme de dispersion soit très pertinent ici pour le moment. 
+
 
