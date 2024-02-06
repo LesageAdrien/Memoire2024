@@ -1,4 +1,7 @@
-J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'y ai affiché U en fonction du temps, sa transformée de fourier Û (partie reel, partie imaginaire, module), ainsi que la dérivée de l'argument de Û par rapport au temps.
+J'ai implémenté les équation de Airy sous python, (KdV sans transport). 
+J'y ai affiché U en fonction du temps, sa transformée de fourier Û (partie reel, partie imaginaire, module), 
+ainsi que la dérivée de l'argument de Û par rapport au temps. C'est une implémentation de type CrankNicholson.
 
-
+J'ai ensuite implémenté KdV à partir du code précédent, en y ajoutant le terme ( u^2 )_x. 
+J'ai implémenté un schéma de type Crank Nicholson en effectuant une méthode de point fixe pour gerer le terme non linéaire.
 
