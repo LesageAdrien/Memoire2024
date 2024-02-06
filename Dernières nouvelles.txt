@@ -1,0 +1,4 @@
+J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'y ai affiché U en fonction du temps, sa transformée de fourier Û (partie reel, partie imaginaire, module), ainsi que la dérivée de l'argument de Û par rapport au temps.
+
+
+
