@@ -1,3 +1,5 @@
+07/02/24
+
 J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'ai utilisé un schéma de type Crank-Nicholson,
 avec pour l'opérateur de dispersion d_{xxx} une matrice B antisymétrique (d'ordre 2) car cela apporte une conservation de la norme L².
 J'y ai affiché:
@@ -8,7 +10,17 @@ Je pense aussi implementer un schéma d'évolution de la transformée de fourier
 
 J'ai ensuite implémenté KdV à partir du code précédent, en y ajoutant le terme ( u^2 )_x. 
 J'ai implémenté un schéma de type Crank Nicholson en effectuant une méthode de point fixe pour gerer le terme non linéaire.
-J'y ai affiché la même chose que précédemment mais je ne pense pas que regarder le déphasage provoqué par le terme de dispersion soit très pertinent ici pour le moment. 
+J'y ai affiché la même chose que précédemment mais je ne pense pas que regarder le déphasage provoqué par le terme de dispersion soit très pertinent ici pour le moment.
+
+08/02/24
+
+J'ai un petit soucis avec les solitons de KdV.
+Le Temam-Miranville fournis une formulation explicite de ces dernières, c'est relativement bien expliqué. 
+J'ai voulu lancer mon code de KdV avec comme fonction de départ un soliton unique mais le soliton se sépare en deux solitons ce qui n'est pas logique. 
+J'ai essayé de voir si ça pouvait avoir dépendre des paramètres de maillage du domaine d'étude (c'est un Tore), mais rien ne change. 
+A poursuivre.
+
+
 
 
 
