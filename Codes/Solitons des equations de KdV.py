@@ -39,7 +39,7 @@ I = sps.eye(N,format = "csr", dtype = float)
 """Construction des données initiales et des paramètres d'évolution en temps"""
 
 def soliton(c,xi):
-    return 3*c/np.sqrt(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
+    return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
 c = 1
 U = soliton(c,X)
