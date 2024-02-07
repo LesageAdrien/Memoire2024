@@ -19,9 +19,9 @@ def D_mat(N,h):
 
 """Données relative à la discrétisation du Tore"""
 
-length = 20
+length = 30
 a = -length/2*np.pi; b = length/2*np.pi 
-N = 100
+N = 1000
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
@@ -31,8 +31,8 @@ xfreq = fftfreq(N,1/N)
 
 
 """Construction des matrices intervenant dans la boucle"""
-D = D_mat(N,h)
-B = -B_mat(N,h)
+D = -D_mat(N,h)
+B = B_mat(N,h)
 I = sps.eye(N,format = "csr", dtype = float)
 
 
@@ -42,15 +42,19 @@ I = sps.eye(N,format = "csr", dtype = float)
 #U = np.sin(2 * X)
 #U = np.exp(-100*(np.cos(X/2))**2)
 
+def soliton(c,xi):
+    return 3*c/np.sqrt(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
+
 c = 1
-U = 3*c/np.sqrt(1 + np.sinh(0.5*np.sqrt(c)*X)**2)
+U = soliton(c,X)
 waveheight = np.max(U)
 
 
-T = 40; dt = 1e-1 ; t = 0
+T = 400; dt = 1e-1 ; t = 0
 
 alpha = 0
-Mat = I + dt/2*B
+theta = 0.5
+Mat = I + dt*theta*B
 
 """Placement initial des fenètres"""
 # plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
@@ -66,6 +70,7 @@ while t<T:
     
     plt.figure(0)
     plt.clf()
+    plt.plot(X,soliton(c,X-c*t),"k--")
     plt.plot(X,U)
     plt.ylim(0,waveheight+0.5)
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
@@ -77,13 +82,12 @@ while t<T:
     
     """Calcul du prochain U"""
     
-    #Unew = sps.linalg.spsolve(I + dt * B,  U) # Formulation implicite
     res = 1
     Uk = np.copy(U)
     i=1
     while res > 1e-8:
         i+=1
-        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt/2 * B.dot(U) + 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
+        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt* (1-theta) * B.dot(U) + 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
         res = np.max(np.abs(Uk-Uknew))
         Uk = np.copy(Uknew)
         
