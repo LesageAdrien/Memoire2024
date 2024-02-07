@@ -41,8 +41,10 @@ I = sps.eye(N,format = "csr", dtype = float)
 def soliton(c,xi):
     return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
-c = 0.5
-U = soliton(c,X) + soliton(c*2,X-length/8)
+def duosoliton(c_1,c_2,offset_1,offset_2,X,t):
+    return soliton(c_1,X-offset_1-c_1*t) + soliton(c_2,X-offset_2-c_2*t)
+c = 2
+U =  duosoliton(c*2, c, -length/5, length/5, X, 0)
 waveheight = np.max(U)
 
 
@@ -66,7 +68,7 @@ while t<T:
     
     plt.figure(0)
     plt.clf()
-    plt.plot(X,soliton(c,X-c*t),"k--")
+    plt.plot(X,duosoliton(c*2, c, -length/5, length/5, X, t),"k--")
     plt.plot(X,U)
     plt.ylim(0,waveheight+0.5)
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
