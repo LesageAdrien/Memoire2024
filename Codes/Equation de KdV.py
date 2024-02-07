@@ -72,7 +72,7 @@ while t<T:
     i=1
     while res > 1e-6:
         i+=1
-        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt/2 * B.dot(U) + 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
+        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt/2 * B.dot(U) - 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
         res = np.linalg.norm(Uk-Uknew)*np.sqrt(h)
         Uk = np.copy(Uknew)
         

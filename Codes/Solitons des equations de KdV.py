@@ -31,16 +31,12 @@ xfreq = fftfreq(N,1/N)
 
 
 """Construction des matrices intervenant dans la boucle"""
-D = -D_mat(N,h)
+D = D_mat(N,h)
 B = B_mat(N,h)
 I = sps.eye(N,format = "csr", dtype = float)
 
 
 """Construction des données initiales et des paramètres d'évolution en temps"""
-
-#U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
-#U = np.sin(2 * X)
-#U = np.exp(-100*(np.cos(X/2))**2)
 
 def soliton(c,xi):
     return 3*c/np.sqrt(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
@@ -87,7 +83,7 @@ while t<T:
     i=1
     while res > 1e-8:
         i+=1
-        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt* (1-theta) * B.dot(U) + 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
+        Uknew = sps.linalg.spsolve((alpha + 1)*Mat, alpha*Mat.dot(Uk) + U - dt* (1-theta) * B.dot(U) - 0.5*dt*D.dot((Uk+U)**2/4))  # Formulation Crank Nichloson + itération de picard
         res = np.max(np.abs(Uk-Uknew))
         Uk = np.copy(Uknew)
         
