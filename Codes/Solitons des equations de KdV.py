@@ -42,7 +42,7 @@ def soliton(c,xi):
     return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
 c = 0.5
-U = soliton(c,X) + soliton(c*2,X-length/8)
+U = soliton(c,X)
 waveheight = np.max(U)
 
 
