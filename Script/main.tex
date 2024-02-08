@@ -27,7 +27,7 @@
 \def\proof{\begin{thmbox}[M]{\textbf{Preuve :}}}
 \def\endproof{\end{thmbox}}
 \begin{document}
-\title{Sur l'étude de plusieurs régimes asymptotiques des équations d'Euler à surface libre.}
+\title{Analyse spectrale d'écoulements fluides et modèles d'amortissement}
 \author{Lesage Adrien}
 \maketitle
 \newpage
@@ -54,6 +54,7 @@ Soit $\textbf{X} = \mathbb{R}^d$ avec $d \in \{1,2\}$. On souhaite étudier un t
     \item[$(\textbf{H}_6)$ : ]  En tout point $x\in\textbf{X}$ et en tout instant $t\geq 0$, l'épaisseur du fluide $\zeta(t,x) - (b(x)-H_0)$ est supérieure à une constante $H_0>0$ indépendante de $x$ et de $t$.
     \item[$(\textbf{H}_7)$ : ] La pression  du fluide à la surface est égale à la pression atmosphérique $P_{\text{atm}}$ (on néglige les tensions de surface).
     \item[$(\textbf{H}_8)$ : ] Le fluide est soumis à une force de gravité d'intensité $g$ et de direction opposée au vecteur $\textbf{z} = (0_{\textbf{X}},1)$.
+    \item[$(\textbf{H}_9)$ : ] Le fluide est au repos à l'infini et $\lim\limits_{\|x\|\rightarrow \infty}\zeta(x,t) = 0$
 \end{list}
 
 \begin{center}
@@ -176,10 +177,11 @@ Donc $\textbf{n} = n_2\left(\begin{array}{l}
          - \nabla_X\zeta(t,x)\\
          1
     \end{array}\right)$
-Comme la normale est dirigée vers le haut, il vient que $n_2>0$ et comme $\|\textbf{n}\| = 1$, on trouve finalement $$\textbf{n} = \frac{1}{\sqrt{1+\|\nabla_X\zeta(t,x)\|^2}}\left(\begin{array}{l}
+Comme la normale est dirigée vers le haut, il vient que $n_2>0$ et comme $\|\textbf{n}\| = 1$, on trouve finalement \begin{equation} \label{normal_surface_vector}
+\textbf{n} = \frac{1}{\sqrt{1+\|\nabla_X\zeta(t,x)\|^2}}\left(\begin{array}{l}
          - \nabla_X\zeta(t,x)\\
          1
-    \end{array}\right)$$
+    \end{array}\right)\end{equation}
 \textit{Etape 2 : }Considérons à nouveau $\left(\begin{array}{l}
          \mathcal{X}\\
          \mathcal{Z}
@@ -227,7 +229,10 @@ Ainsi, l'hypothèse $(\textbf{H}_3)$, qui se traduit par $\rot(\textbf{U})=0$, p
 \end{equation}
 
 \subsection{Formulation de Bernoulli}
-Grace notament à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connexe à tout instant $t$, et comme $\rot(\textbf{U}) = 0$, on en déduit alors l'existence d'une fonction $\Phi(t,.,.): \textbf{X}\times \mathbb{R} \rightarrow \mathbb{R}$ telle que $$\textbf{U} = \nabla \phi  \;.$$    Ceci permet de réecrire le système (\ref{eq_E1bis}).
+
+Grace notament à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connexe à tout instant $t$, et comme $\rot(\textbf{U}) = 0$, on en déduit alors l'existence d'une fonction $\Phi(t,.,.): \textbf{X}\times \mathbb{R} \rightarrow \mathbb{R}$ telle que $$\textbf{U} = \nabla \phi  \;.$$    
+
+Ceci permet de réécrire le système (\ref{eq_E1bis}).
 
 \begin{align*}
     0 = &\rho \left ( \frac{\partial \nabla \phi }{\partial t} +\frac{1}{2}\nabla  |\nabla \phi|^2  +  g\textbf{z} \right)+ \nabla \textbf{P} 
@@ -236,27 +241,44 @@ Grace notament à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connex
     \\
     =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + \textbf{P}  - \textbf{P}_{\text{atm}}\right)
 \end{align*}
+
 Une condition suffisante pour verifier (\ref{eq_E1bis}) est alors
-\begin{equation} \tag{\textbf{B}_1} \label{eq_B1}
+\begin{equation} \tag{$\textbf{B}_1$} \label{eq_B1}
   \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz   = \frac{1}{\rho}\left( \textbf{P}_{\text{atm}}  - \textbf{P}\right)
 \end{equation}
+
 Et comme $\text{div}(\nabla \phi) = \Delta \phi$, la condition d'incompressibilité (\ref{divergence_free}) devient alors
 
-\begin{equation} \tag{\textbf{B}_2} \label{eq_B2}
+\begin{equation} \tag{$\textbf{B}_2$} \label{eq_B2}
     \Delta \phi = 0
 \end{equation}
 
 L'équation (\ref{eq_E2}), devient
 
-\begin{equation} \tag{\textbf{B}_3} \label{eq_B3}
+\begin{equation} \tag{$\textbf{B}_3$} \label{eq_B3}
     \frac{\partial \phi}{\partial \textbf{n}} = 0 ~~~ \text{dans}\,\{z = b(x)-H_0\} .
 \end{equation}
 
 L'équation (\ref{eq_E3}), devient
 
- \begin{equation} \tag{\textbf{B}_4} \label{eq_B4}
-     \frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2}\frac{\partial \phi}{\partial \textbf{n}} = 0 ~~~\text{dans}\,\{z = \zeta(t,x)\} .
+\begin{equation} \tag{$\textbf{B}_4$} \label{eq_B4}
+\frac{\partial \zeta}{\partial t}  - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2}\frac{\partial \phi}{\partial\textbf{n}} = 0~~~\text{dans}\,\{z = \zeta(t,x)\} .
 \end{equation}
+
+Sachant (\ref{normal_surface_vector}), on connaît et on utilisera souvent l'équivalence entre (\ref{eq_B4}) et l'équation suivante
+
+
+\begin{equation} \label{eq_B4_bis}
+    \frac{\partial \zeta}{\partial t}  + \nabla_\textbf{X}\zeta\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = \zeta(t,x)\} 
+\end{equation}
+
+De manière analogue, on a aussi équivalence entre (\ref{eq_B3}) et 
+
+\begin{equation} \label{eq_B3_bis}
+    \nabla_\textbf{X}b\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = b(x)\} 
+\end{equation}
+
+
 
 \subsection{Formulation de Craig-Sulem-Zakharov}
 \subsection{Adimensionnement des paramètres du système}
@@ -276,7 +298,8 @@ Dans notre cas, les grandeurs caractéristiques de notre système sont
     \item $a_{\text{bot}} = max(|b|)$ est l'amplitude du fond du fluide.
     \item $L_1$ est la longueur d'onde de $\zeta$ dans la direction $\textbf{e}_1$.
     \item $L_2$ est la longueur d'onde de $\zeta$ dans la direction transversale $\textbf{e}_2$ (si $\textbf{X} = \mathbb{R}^2)$.
-\end{list}
+    
+ \end{list}
 \,
 \\
 
@@ -288,6 +311,7 @@ On étudiera les rapports suivants.
     \item $\beta = \frac{a_{\text{bot}}}{H_0}$ est le coefficient de \textit{dénivellation} du fond.
     \item $\gamma = \frac{L_1}{L_2}$ est le coefficient de \textit{transversalité}.
     \item $\epsilon = \frac{ a_{\text{surf}}}{L_1}$ le coefficient d'\textit{amplitude}.
+    \item $t_0 = \frac{L_1}{\sqrt{gH_0}}$ est l'échelle de temps caractéristique.
 \end{list}
 
 ~\\
@@ -296,9 +320,9 @@ Pour adimensionner nos équations, on pose l'isomorphisme linéaire suivant:
   
 \begin{equation}
 \begin{aligned}
-      \mathcal{I}:~~&\textbf{X}\times\mathbb{R} &\longrightarrow ~~~ &\textbf{X}\times \mathbb{R} & \\
-      &((x_1,x_2),z) &\longmapsto &\left(\left(\frac{x_1}{L_1},\frac{x_2}{L_2} \right),\frac{z}{H_0}\right) ~~~&\text{si }\textbf{X}=\mathbb{R}^2\\
-      &(x_1 ,z) &\longmapsto &\left(\frac{x_1}{L_1},\frac{z}{H_0}\right) ~~~&\text{si }   \textbf{X}=\mathbb{R}
+      \mathcal{I}:~~&\mathbb{R}\times\textbf{X}\times\mathbb{R} &\longrightarrow ~~~ &\textbf{X}\times \mathbb{R} & \\
+      &(t,(x_1,x_2),z) &\longmapsto &\left(\frac{t}{t_0},\left(\frac{x_1}{L_1},\frac{x_2}{L_2} \right),\frac{z}{H_0}\right) ~~~&\text{si }\textbf{X}=\mathbb{R}^2\\
+      &(t, x ,z) &\longmapsto &\left(\frac{t}{t_0},\frac{x}{L_1},\frac{z}{H_0}\right) ~~~&\text{si }   \textbf{X}=\mathbb{R}
 \end{aligned}
 \end{equation}
 
@@ -306,39 +330,155 @@ Pour adimensionner nos équations, on pose l'isomorphisme linéaire suivant:
    
     
 
-on effectue le changement de variable suivant.
+
+~\\
+
+On effectue le changement de variable suivant.
 
 \begin{list}{\textbullet}{}
-    \item $(x',z') = \mathcal{I} (x,z)$
-    \item $\zeta' = \dfrac{\zeta \circ \mathcal{I}^{-1}}{a_{\text{surf}}}$
-    \item $b' = \dfrac{b\circ\mathcal{I}^{-1}}{a_{\text{bot}}}$
-     \item $\phi' = \dfrac{\phi \circ \mathcal{I}^{-1}}{\phi_0}$   dont il nous restera à déterminer la constante $\phi_0$
+    \item $(t',x',z') = \mathcal{I} (t,x,z)$
+    \item $\zeta' = \dfrac{1}{a_{\text{surf}}}(\zeta \circ \mathcal{I}^{-1})$ 
+    \item $b' = \dfrac{1}{a_{\text{bot}}}(b\circ\mathcal{I}^{-1})$
+     \item $\phi' = \dfrac{1}{g t_0 a_{\text{surf}}}(\phi \circ \mathcal{I}^{-1})$
+     \item $P' = \dfrac{t_0^2}{H_0^2\rho_0} (P \circ \mathcal{I}^{-1})~~~~~~~$   (et $P_{\text{atm}}' = \dfrac{t_0^2}{H_0\rho_0} P_\text{atm}$)
 \end{list}
 
 Ceci nous donne, entre autre, 
 \begin{align}
-    &-1 \leq \zeta' \leq 1\\ &-1 \leq b' \leq 1
+    &-1 \leq \zeta' \leq 1\\ &-1 \leq b' \leq 1 
+\end{align}
+\subsubsection{Adimensionnement des équations de Bernoulli pour $\textbf{X} = \mathbb{R}$}
+Pour $\textbf{X} = \mathbb{R}$, l'adimensionnement de (\ref{eq_B1}) s'éffectue ainsi:
+\begin{align}
+    \text{(\ref{eq_B1})} &\Leftrightarrow \frac{g t_0 a_{\text{surf}}}{t_0}\partial_{t'} \phi' + \frac{1}{2}\left(\frac{(g t_0 a_{\text{surf}})^2}{L_1^2}(\partial_{x'}\phi')^2+ \frac{(g t_0 a_{\text{surf}})^2}{H_0^2}(\partial_{z'}\phi')^2\right) + g H_0 z' = \frac{1}{\rho_0}\frac{H_0^2\rho_0}{t_0^2}(P'-P'_{\text{atm}}) \nonumber\\
+    &\text{On factorise le terme non linéaire par $ \frac{(g t_0 a_{\text{surf}})^2 }{L_1^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + (g t_0 a_{\text{surf}})^2\frac{1}{2L_1^2}\left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) + g H_0 z' =  \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On développe $gt_0$ dans ce terme.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     ( \sqrt{g}\frac{L_1}{\sqrt{H_0}} a_{\text{surf}})^2
+     \frac{1}{2L_1^2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On simplifie ce terme.}\nonumber\\
+    &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     \frac{g a_{\text{surf}}^2}{2H_0}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On voit apparaître $\varepsilon$.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     \varepsilon\frac{g a_{\text{surf}}}{2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On divise tout par $g  a_{\text{surf}}$ et on voit à nouveau apparaître $\varepsilon$ et $\mu$}. \nonumber\\
+     &\Leftrightarrow   \partial_{t'} \phi' + 
+     \frac{\varepsilon}{2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + \frac{z'}{\varepsilon} 
+     = \frac{\mu}{\varepsilon}(P'-P'_{\text{atm}}) \label{eq_B1_adim}
+\end{align}
+\\
+
+L'adimensionnement de (\ref{eq_B2}) s'effectue ainsi:
+\begin{align}
+    \text{(\ref{eq_B2})} &\Leftrightarrow  \frac{(g t_0 a_{\text{surf}})}{L_1^2}\partial_{x' x'}\phi'+ \frac{(g t_0 a_{\text{surf}})}{H_0^2}\partial_{z' z'}\phi'  = 0\nonumber\\
+    &\text{On divise le tout par $ \frac{(g t_0 a_{\text{surf}})^2 }{H_0^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
+    &\Leftrightarrow \partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 \label{eq_B2_adim}
 \end{align}
 
-[\texttt{ ... Justifications à ajouter...}] L'équation (\ref{eq_B1}) devient 
+L'adimensionnement de (\ref{eq_B3}) s'effectue ainsi
 
-$$\partial_{z'z'}\phi' + \mu \partial_{x_1'x_1'}\phi' = 0 ~~~ \text{si }\textbf{X} = \mathbb{R} $$
-$$\partial_{z'z'}\phi' + \mu \partial_{x_1'x_1'}\phi' + \mu \gamma^2 \partial_{x_2'x_2'}\phi' = 0 ~~~ \text{si }\textbf{X} = \mathbb{R}^2$$
+\begin{align}
+\text{(\ref{eq_B3})} &\Leftrightarrow \text{(\ref{eq_B3_bis})}& ~ \nonumber\\
+&\Leftrightarrow \partial_x b \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = b(x) - H_0\} \nonumber\\
+&\Leftrightarrow \left(\frac{a_{\text{bot}}}{L_1} \partial_{x'} b'\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
+&\Leftrightarrow  \frac{a_{\text{bot}}H_0}{L_1^2} \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
+&\Leftrightarrow  \beta \mu \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\label{eq_B3_adim}
+\end{align}
+
+L'adimensionnement de (\ref{eq_B4}) s'effectue ainsi
+
+\begin{align}
+\text{(\ref{eq_B4})} &\Leftrightarrow \text{(\ref{eq_B4_bis})}& ~ \nonumber\\
+&\Leftrightarrow \partial_t\zeta + \partial_x \zeta \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = \zeta(x,t)\} \nonumber\\
+&\Leftrightarrow \frac{a_{\text{surf}}}{t_0}\partial_{t'} \zeta' + \left(\frac{a_{\text{surf}}}{L_1} \partial_{x'} \zeta '\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \varepsilon \zeta(t',x')\}\nonumber\\
+&\Leftrightarrow \partial_{t'}\zeta' +  \frac{gt_0^2a_{\text{surf}}}{L_1^2} \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{gt_0^2}{H_0}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \nonumber \\
+&\Leftrightarrow \partial_{t'}\zeta' +  \varepsilon \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{1}{\mu}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \label{eq_B4_adim}
+\end{align}
 
 
 
-Par la suite, lorsqu'on travaillera sur les équations adimensionnés, on se permettra pour la suite d'omettre les apostrophes sur ces variables.
-\section{Cas du fond plat: Vers les équations de Korteweg-de Vries} 
 
 
 
+Par la suite, lorsqu'on travaillera sur les équations adimensionnées, on se permettra d'omettre les apostrophes sur ces variables.
+\newpage
+\section{Cas du fond plat: Les équations de Korteweg-de Vries} 
+\subsection{A partir des équations d'Euler}
+Dans cette partie on s'intéressera au cas où $\textbf{X} = \mathbb{R}$ et $b = 0$. D'après, (\ref{eq_B1_adim}), (\ref{eq_B2_adim}), (\ref{eq_B3_adim}) et (\ref{eq_B4_adim}), on se retrouve alors à étudier le système suivant.
+
+\begin{align}
+~&\partial_{t} \phi + 
+     \frac{\varepsilon}{2}(\partial_{x}\phi)^2+ \frac{\varepsilon}{2\mu}(\partial_{z}\phi)^2
+     + \frac{z}{\varepsilon} 
+     = \frac{\mu}{\varepsilon}(P-P_{\text{atm}}) &\text{ si } -1 < z < \varepsilon \zeta(t,x)\\
+~&\partial_{zz}\phi + \mu \partial_{x x}\phi  = 0  &\text{ si } -1 < z < \varepsilon \zeta(t,x) \label{eq_k2}\\
+~&\partial_{z}\phi = 0&\text{ si } z  = - 1\label{eq_k3}\\
+~&\partial_{t}\zeta +  \varepsilon \partial_{x} \zeta  \partial_{x}\phi  - \frac{1}{\mu}\partial_{z}\phi = 0 &\text{ si } z = \varepsilon \zeta(t,x)
+\end{align}
+
+Plus précisément, on s'intéressera au cas où $\mu << 1$.
+\begin{prop}
+    Si $\phi$ est infiniment dérivable et si $\phi(t,x,\cdot)$ est développable en série entière selon la variable $z$ en $z = -1$ pour tout point $x \in \textbf{X}$ et en tout temps $t\geq 0$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$ telle que
+    \begin{equation}
+        \phi (t,x,z) = \sum_{j = 0}^\infty \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}f}{\partial x^{2j}}(x,t)
+    \end{equation}
+\end{prop}
+\begin{proof}
+Soit $(f_n)_{n\in \mathbb{N}}$ la famille telle que
+\begin{equation*}
+    \phi (t,x,z) = \sum_{n\geq 0} f_n(x,t)(z+1)^n
+\end{equation*}
+
+Alors on a aussi
+\begin{equation*}
+    \partial_{zz}\phi(t,x,z) = \sum_{n\geq 2} n(n-1)f_n(x,t)(z+1)^{n-2} =  \sum_{n\geq 0} (n+1)(n+2)f_{n+2}(x,t)(z+1)^{n}
+\end{equation*}
+
+De plus, du fait que $f_n(x,t) = \frac{\partial^n\phi}{\partial z ^n}(t,x,-1)$, on déduit que $f_n$ est infiniment dérivable et donc 
+\begin{equation*}
+    \partial_{xx}\phi(t,x,z) = \sum_{n\geq 0}  \partial_{xx}f_n(x,t)(z+1)^{n}
+\end{equation*}
+
+De (\ref{eq_k2}), il vient alors la relation
+\begin{equation*}
+    \sum_{n\geq 0} (n+1)(n+2)f_{n+2}(x,t)(z+1)^{n} + \mu\sum_{n\geq 0}  \partial_{xx}f_n(x,t)(z+1)^{n} = 0
+\end{equation*}
+
+Ce qui revient à dire que, pour tout entier $n\geq 0$, 
+\begin{equation*}
+    (n+1)(n+2)f_{n+2}(x,t) + \mu\partial_{xx}f_n(x,t) = 0
+\end{equation*}
+
+Si pour $n = 1$, on a $$6f_3 = \mu\partial_{xx}f_1$$ 
+
+or, $$f_1 = \partial_{z}\phi(t,x,-1) = 0$$ 
+
+d'après (\ref{eq_k3}). Donc $f_3 = 0 $. Par récurrence sur les $n$ impairs , on montre de la même manière que, pour tout entier naturel $k$,
+$$f_{2k+1} = 0$$
+
+Par récurrence sur les $n$ pairs ensuite, on trouve que, pour tout entier naturel $k$,
+$$f_{2k} = \frac{(-\mu)^k}{(2k)!}\frac{\partial^{2k} f_0}{\partial x ^{2k}}$$
+
+Poser $f = f_0$ nous donne donc le résultat.
+\end{proof}
 
 
-\section{Annexe 1: Quelques rappels sur les opérateurs différentiels linéaires: Laplacien, Rotationnel, Gradient}
 
 
 
 \end{document}
-#El Amrani P 185 pour la densitié des e_n dans L2
-#VOIR ZUILLY QUEFFELEC P 107 ET CANDELPERGHER P401 POUR L'EQUATION DE LA CHALEUR
-#VOIR AUSSI ZUILLY QUEFFELEC P68 ET CANDELPERGHER P303 POUR LES DEFINITIONS 
+\paragraph{Exemple :} Après ces changements de variables, (\ref{eq_B2}) devient $$\partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 ~~~ \text{si }\textbf{X} = \mathbb{R} $$
+$$\partial_{z'z'}\phi' + \mu \partial_{x_1'x_1'}\phi' + \mu \gamma^2 \partial_{x_2'x_2'}\phi' = 0 ~~~ \text{si }\textbf{X} = \mathbb{R}^2$$
