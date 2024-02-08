@@ -21,13 +21,13 @@ def D_mat(N,h):
 
 length = 30
 a = -length/2*np.pi; b = length/2*np.pi 
-N = 300
+N = 1000
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
 """Données relative a la FFT"""
 
-xfreq = fftfreq(N,1/N)/(b-a)*2*np.pi
+xfreq = fftfreq(N,1/N)/(b-a) * 2 * np.pi
 
 
 """Construction des matrices intervenant dans la boucle"""
@@ -45,7 +45,7 @@ def duosoliton(c_1,c_2,offset_1,offset_2,X,t):
     return soliton(c_1,X-offset_1-c_1*t) + soliton(c_2,X-offset_2-c_2*t)
 c = 2
 U =  duosoliton(c*2, c, -length/5, length/5, X, 0)
-
+waveheight = np.max(U)
 
 
 T = 400; dt = 1e-1 ; t = 0
@@ -55,13 +55,12 @@ theta = 0.5
 Mat = I + dt*theta*B
 
 """Placement initial des fenètres"""
-# plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
-# plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
-# plt.figure(1)
-# plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
 plt.figure(0)
 plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
-
+plt.figure(1)
+plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
+plt.figure(2)
+plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
 """Execution de la boucle"""
 while t<T:
     """Affichage de U au temps t"""
@@ -101,7 +100,6 @@ while t<T:
     
     
     plt.figure(1)
-    plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
     plt.clf()
     plt.ylim(-1,1)
     plt.title("Transformée de fourier")
@@ -115,7 +113,6 @@ while t<T:
     
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
     plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
-    plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
     plt.clf()
     plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
     plt.plot(xfreq[:N//10], np.angle(fft(U)[:N//10]/fft(Unew)[:N//10])/dt) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.

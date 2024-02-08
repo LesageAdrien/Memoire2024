@@ -99,9 +99,10 @@ while t<T:
     plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
     
     plt.plot(firstfreq, np.arctan(dt* firstfreq**3)/dt,"k--", label =  "Implicite/Explicite Dephasage")
+    plt.plot(firstfreq, (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt,"g-.", label =  "theta schéma actuel")
     plt.plot(firstfreq, 2*np.arctan(dt/2*firstfreq**3)/dt,"r--", label =  "Crank Nicholson Dephasage")
-    plt.plot(firstfreq, (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt,"g--", label =  "theta schéma actuel")
-    plt.plot(firstfreq, (firstfreq)**3, "y--", label = "déphasage theorique")
+    
+    plt.plot(firstfreq, (firstfreq)**3, "y--", label = "déphasage analytique")
     plt.plot(firstfreq, np.angle(fft(Unew)[:N//firstfreq_ratio]/fft(U)[:N//firstfreq_ratio])/dt, label = "déphasage calculé") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
     plt.xlabel("$\\xi $")
     plt.legend()

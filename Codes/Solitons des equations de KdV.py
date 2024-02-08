@@ -59,7 +59,10 @@ Mat = I + dt*theta*B
 # plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
 plt.figure(0)
 plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
-
+plt.figure(1)
+plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
+plt.figure(2) 
+plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
 """Execution de la boucle"""
 while t<T:
     """Affichage de U au temps t"""
@@ -97,7 +100,6 @@ while t<T:
     
     
     plt.figure(1)
-    plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
     plt.clf()
     plt.ylim(-1,1)
     plt.title("Transformée de fourier")
@@ -111,7 +113,6 @@ while t<T:
     
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
     plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
-    plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
     plt.clf()
     plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
     plt.plot(xfreq[:N//10], np.angle(fft(Unew)[:N//10]/fft(U)[:N//10])/dt, label = "déphasage calculé") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
