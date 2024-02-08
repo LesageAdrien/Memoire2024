@@ -20,6 +20,22 @@ J'ai voulu lancer mon code de KdV avec comme fonction de départ un soliton uniq
 J'ai essayé de voir si ça pouvait avoir dépendre des paramètres de maillage du domaine d'étude (c'est un Tore), mais rien ne change. 
 A poursuivre.
 J'ai finalement trouvé, la formule finale du Temam Miranville était éronnée, la thèse de garnier donne la bonne formule ainsi que la methode pour l'obtenir.
+J'ai remarqué que deux solitons peuvent se traverser sans qu'ils ne s'anihilent.
+En revanche, elles sont légèrement ralenties pendant le chevauchement. Je ne sais pas trop pourquoi pour l'instant. 
+
+08/02/2024
+
+Beaucoup de rédaction aujourd'hui, j'ai proprement adimensionné les équations de Bernoulli dans mon Latek. ça m'a pris beaucoup de temps.
+J'ai commencé à rédiger le début du developpement asymptotique de Euler vers kdV.
+
+Coté numérique, pour l'équation de Airy, je me suis intéréssé à l'effet du choix de notre schéma sur la vitesse de déplacement des harmonique en fonction des fréquences.
+Pour un thetha schema classique on a une vitesse de dispersion qui se comporte comme une somme deux termes du type (1/dt) * arctan(dt * frequence^3)
+La solution Théorique de l'équation de Airy a un déphasage de l'ordre de freq^3. 
+Pour une fréquence trop grande, notre theta schéma est mauvais (quelle que soit la valeur de theta).
+Ccl: Il faut se fixer une fréquence limite (probablement dépendant de dt) telle que arctan(dt*freq^3) ~ dt*freq^3
+Ce n'est pas un problème comme nous somme dans l'étude de vagues de faible fréquences.
+
+J'ai aussi tracé les déphasage théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
 
 
 

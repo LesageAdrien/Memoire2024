@@ -16,16 +16,18 @@ def B_mat(N,h):
 
 """Données relative à la discrétisation du Tore"""
 
-a = 0; b = 2*np.pi 
-N = 200
+length = 4
+a = 0; b = length * 2*np.pi 
+N = 300
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
 
 """Données relative a la FFT"""
 
-xfreq = fftfreq(N,1/N)
-
+xfreq = fftfreq(N,1/N)/(b-a)*2*np.pi
+firstfreq_ratio = 10
+firstfreq = xfreq[:N//firstfreq_ratio]
 
 
 """Construction des matrices intervenant dans la boucle"""
@@ -39,10 +41,12 @@ I = sps.eye(N,format = "csr", dtype = float)
 
 #U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
 #U = np.sin(10 * X)
-U = 6 * np.exp(-100*(np.cos(X/2))**2)
-T = 10; dt = 1e-3 ; t = 0
-
-
+U = 6 * np.exp(-10*(X-length*np.pi)**2)
+#U = (np.abs(X)< length/3).astype(float) #signal carré
+#U = np.maximum(0, length/3 - np.abs(X)) #signal triangle
+T = 10; dt = 1e-2 ; t = 0
+theta = 0.5  # 1 <=> Implicite, 0.5<=> Crank Nicholson
+waveheight = np.max(np.abs(U))
 
 """Execution de la boucle"""
 while t<T:
@@ -55,7 +59,7 @@ while t<T:
     plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
     plt.clf()
     plt.plot(X,U)
-    plt.ylim(-6,6)
+    plt.ylim(-waveheight*1.5,waveheight*1.5)
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
     plt.xlabel("x")
     plt.show()
@@ -66,7 +70,7 @@ while t<T:
     """Calcul du prochain U"""
     
     #Unew = sps.linalg.spsolve(I + dt * B,  U) # Formulation implicite
-    Unew = sps.linalg.spsolve(I + dt/2 * B,  U - dt/2 * B.dot(U))  # Formulation Crank Nichloson.
+    Unew = sps.linalg.spsolve(I + dt * theta * B,  U - dt* (1-theta) * B.dot(U))  # Formulation Crank Nichloson.
     
     
     """Affichage des données de la transformée de fourrier de la dérivée en temps."""
@@ -93,8 +97,14 @@ while t<T:
     plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
     plt.clf()
     plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
-    plt.plot(xfreq[:N//5], np.angle(fft(U)[:N//5]/fft(Unew)[:N//5])/dt) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    
+    plt.plot(firstfreq, np.arctan(dt* firstfreq**3)/dt,"k--", label =  "Implicite/Explicite Dephasage")
+    plt.plot(firstfreq, 2*np.arctan(dt/2*firstfreq**3)/dt,"r--", label =  "Crank Nicholson Dephasage")
+    plt.plot(firstfreq, (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt,"g--", label =  "theta schéma actuel")
+    plt.plot(firstfreq, (firstfreq)**3, "y--", label = "déphasage theorique")
+    plt.plot(firstfreq, np.angle(fft(Unew)[:N//firstfreq_ratio]/fft(U)[:N//firstfreq_ratio])/dt, label = "déphasage calculé") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
     plt.xlabel("$\\xi $")
+    plt.legend()
     plt.show()
     plt.pause(0.01)
     
