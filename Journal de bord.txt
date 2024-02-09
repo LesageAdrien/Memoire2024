@@ -28,12 +28,12 @@ En revanche, elles sont légèrement ralenties pendant le chevauchement. Je ne s
 Beaucoup de rédaction aujourd'hui, j'ai proprement adimensionné les équations de Bernoulli dans mon Latek. ça m'a pris beaucoup de temps.
 J'ai commencé à rédiger le début du developpement asymptotique de Euler vers kdV.
 
-Coté numérique, pour l'équation de Airy, je me suis intéréssé à l'effet du choix de notre schéma sur la vitesse de déplacement des harmonique en fonction des fréquences.
-Pour un thetha schema classique on a une vitesse de dispersion qui se comporte comme une somme deux termes du type (1/dt) * arctan(dt * frequence^3)
+Coté numérique, pour l'équation de Airy, je me suis intéréssé à l'effet du choix de notre schéma sur la vitesse de déplacement des harmonique en fonction des fréquences que j'appelle déphasage (en rad/s).
+Pour un thetha schema classique on a un déphasage des harmoniques qui se comporte comme une somme deux termes du type (1/dt) * arctan(dt * frequence^3)
 La solution Théorique de l'équation de Airy a un déphasage de l'ordre de freq^3. 
 Pour une fréquence trop grande, notre theta schéma est mauvais (quelle que soit la valeur de theta).
 Ccl: Il faut se fixer une fréquence limite (probablement dépendant de dt) telle que arctan(dt*freq^3) ~ dt*freq^3
-Ce n'est pas un problème comme nous somme dans l'étude de vagues de faible fréquences.
+Ce n'est pas vraiment un problème car on s'interesse à l'étude de vagues de faible fréquences.
 
 J'ai aussi tracé les déphasage théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
 
