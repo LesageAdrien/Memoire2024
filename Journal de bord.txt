@@ -4,7 +4,7 @@ J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'ai 
 avec pour l'opérateur de dispersion d_{xxx} une matrice B antisymétrique (d'ordre 2) car cela apporte une conservation de la norme L².
 J'y ai affiché:
 	- U en fonction du temps
-	- Û (la transformée de fourier de U) en fonction du temps (partie reel, partie imaginaire, module)
+	- Û (la transformée de fourier de U (FFT) ) en fonction du temps (partie reel, partie imaginaire, module)
 	- La dérivée de l'argument de Û par rapport au temps (i.e. la dérivée du déphasage de chaque Harmonique)
 Je pense aussi implementer un schéma d'évolution de la transformée de fourier.
 
