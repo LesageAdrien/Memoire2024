@@ -35,7 +35,7 @@ Pour une fréquence trop grande, notre theta schéma est mauvais (quelle que soi
 Ccl: Il faut se fixer une fréquence limite (probablement dépendant de dt) telle que arctan(dt*freq^3) ~ dt*freq^3
 Ce n'est pas vraiment un problème car on s'interesse à l'étude de vagues de faible fréquences.
 
-J'ai aussi tracé les déphasage théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
+J'ai aussi tracé les déphasages théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
 
 
 
