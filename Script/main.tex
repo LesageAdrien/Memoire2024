@@ -416,7 +416,7 @@ L'adimensionnement de (\ref{eq_B4}) s'effectue ainsi
 Par la suite, lorsqu'on travaillera sur les équations adimensionnées, on se permettra d'omettre les apostrophes sur ces variables.
 \newpage
 \section{Cas du fond plat: Les équations de Korteweg-de Vries} 
-\subsection{A partir des équations d'Euler}
+\subsection{Obtention des équations de KdV à partir des équations d'Euler}
 Dans cette partie on s'intéressera au cas où $\textbf{X} = \mathbb{R}$ et $b = 0$. D'après, (\ref{eq_B1_adim}), (\ref{eq_B2_adim}), (\ref{eq_B3_adim}) et (\ref{eq_B4_adim}), on se retrouve alors à étudier le système suivant.
 
 \begin{align}
@@ -431,48 +431,58 @@ Dans cette partie on s'intéressera au cas où $\textbf{X} = \mathbb{R}$ et $b =
 
 Plus précisément, on s'intéressera au cas où $\mu << 1$.
 \begin{prop}
-    Si $\phi$ est infiniment dérivable et si $\phi(t,x,\cdot)$ est développable en série entière selon la variable $z$ en $z = -1$ pour tout point $x \in \textbf{X}$ et en tout temps $t\geq 0$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$ telle que
+    Si $\phi$ est de classe $2n+2$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$, de classe $2n+2$, telle que
     \begin{equation}
-        \phi (t,x,z) = \sum_{j = 0}^\infty \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}f}{\partial x^{2j}}(x,t)
+        \phi (t,x,z) = \sum_{j = 0}^{n} \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}f}{\partial x^{2j}}(x,t)
+        + (-\mu)^{n+1}\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial x^{2n+2}}(t,x,s)ds
     \end{equation}
 \end{prop}
 \begin{proof}
-Soit $(f_n)_{n\in \mathbb{N}}$ la famille telle que
+Le développement de Taylor de $\phi$ en $z = -1$, à l'ordre $2n+2$, (avec reste intégrale).
 \begin{equation*}
-    \phi (t,x,z) = \sum_{n\geq 0} f_n(x,t)(z+1)^n
+\begin{split}
+    \phi(t,x,z) = &\phi(t,x,-1) + (z+1)\frac{\partial \phi}{\partial z}(t,x,-1)\\
+    &+ \frac{(z+1)^2}{2}\frac{\partial^2 \phi}{\partial z^2}(t,x,-1) + \frac{(z+1)^3}{3!}\frac{\partial^3 \phi}{\partial z^3}(t,x,-1)\\
+    & \cdots\\
+    &+ \frac{(z+1)^{2n}}{(2n)!}\frac{\partial^{2n} \phi}{\partial z^{2n}}(t,x,-1) + \frac{(z+1)^{2n+1}}{(2n+1)!}\frac{\partial^{2n+1} \phi}{\partial z^{2n+1}}(t,x,-1)\\
+    &+\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial z^{2n+2}}(t,x,s)ds
+\end{split}
 \end{equation*}
 
-Alors on a aussi
+L'équation (\ref{eq_k2}) nous donne, après une récurrence immédiate, pour $z>-1$.
 \begin{equation*}
-    \partial_{zz}\phi(t,x,z) = \sum_{n\geq 2} n(n-1)f_n(x,t)(z+1)^{n-2} =  \sum_{n\geq 0} (n+1)(n+2)f_{n+2}(x,t)(z+1)^{n}
+    \frac{\partial^{2j} \phi}{\partial z^{2j}}(t,x,z) = (-\mu)^{n}\frac{\partial^{2j} \phi}{\partial x^{2j}}(t,x,z)
 \end{equation*}
 
-De plus, du fait que $f_n(x,t) = \frac{\partial^n\phi}{\partial z ^n}(t,x,-1)$, on déduit que $f_n$ est infiniment dérivable et donc 
 \begin{equation*}
-    \partial_{xx}\phi(t,x,z) = \sum_{n\geq 0}  \partial_{xx}f_n(x,t)(z+1)^{n}
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,z) = (-\mu)^{n}\frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,z)
 \end{equation*}
 
-De (\ref{eq_k2}), il vient alors la relation
+En faisant tendre $z$ vers -1, il vient que les dérivées partielles $\frac{\partial^{k} \phi}{\partial z^{k}}(t,x,z)$ sont bien définies en $z = -1$ et 
 \begin{equation*}
-    \sum_{n\geq 0} (n+1)(n+2)f_{n+2}(x,t)(z+1)^{n} + \mu\sum_{n\geq 0}  \partial_{xx}f_n(x,t)(z+1)^{n} = 0
+    \frac{\partial^{2j} \phi}{\partial z^{2j}}(t,x,-1) = (-\mu)^{n}\frac{\partial^{2j} \phi}{\partial x^{2j}}(t,x,-1)
+\end{equation*}
+\begin{equation*}
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = (-\mu)^{n}\frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,-1)
 \end{equation*}
 
-Ce qui revient à dire que, pour tout entier $n\geq 0$, 
+De plus, l'équation (\ref{eq_k3}), nous donne $\frac{\partial \phi}{\partial z}(t,x,-1) = 0$ et donc 
 \begin{equation*}
-    (n+1)(n+2)f_{n+2}(x,t) + \mu\partial_{xx}f_n(x,t) = 0
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = 0
 \end{equation*}
 
-Si pour $n = 1$, on a $$6f_3 = \mu\partial_{xx}f_1$$ 
+Finalement, on obtient
 
-or, $$f_1 = \partial_{z}\phi(t,x,-1) = 0$$ 
+    \begin{equation*}
+        \phi (t,x,z) = \sum_{j = 0}^{n} \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}\phi}{\partial x^{2j}}(t,x,-1)
+        + (-\mu)^{n+1}\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial x^{2n+2}}(t,x,s)ds
+    \end{equation*}
 
-d'après (\ref{eq_k3}). Donc $f_3 = 0 $. Par récurrence sur les $n$ impairs , on montre de la même manière que, pour tout entier naturel $k$,
-$$f_{2k+1} = 0$$
 
-Par récurrence sur les $n$ pairs ensuite, on trouve que, pour tout entier naturel $k$,
-$$f_{2k} = \frac{(-\mu)^k}{(2k)!}\frac{\partial^{2k} f_0}{\partial x ^{2k}}$$
+Ce qui, si on pose $f(t,x) = \phi(t,x,-1)$, nous donne le résultat.
 
-Poser $f = f_0$ nous donne donc le résultat.
+
+
 \end{proof}
 
 
