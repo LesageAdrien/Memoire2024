@@ -48,7 +48,7 @@ U =  duosoliton(c*2, c, -length/5, length/5, X, 0)
 waveheight = np.max(U)
 
 
-T = 400; dt = 1e-1 ; t = 0
+T = 400; dt = 0.1 ; t = 0
 
 alpha = 0
 theta = 0.5
@@ -89,7 +89,7 @@ while t<T:
         res = np.max(np.abs(Uk-Uknew))
         Uk = np.copy(Uknew)
         
-    print(i)
+    #print(i)
     Unew = np.copy(Uk)
 
 
@@ -114,10 +114,11 @@ while t<T:
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
     plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
     plt.clf()
-    plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
-    plt.plot(xfreq[:N//10], np.angle(fft(U)[:N//10]/fft(Unew)[:N//10])/dt) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
-    plt.plot(xfreq[:N//10], c*xfreq[:N//10], "k--", label = "déphasage théorique du soliton lent" )
-    plt.plot(xfreq[:N//10], 2*c*xfreq[:N//10], "g--", label = "déphasage théorique du soliton rapide" )
+    plt.title("Vitesse de transport des harmoniques en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
+    plt.ylim(0,4*c)
+    plt.plot(xfreq[1:N//10], (np.angle(fft(U)[1:N//10]/fft(Unew)[1:N//10])/dt)/xfreq[1:N//10]) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    plt.plot(xfreq[1:N//10], c*(0*xfreq[1:N//10]+1), "k--", label = "vitesse théorique du soliton lent soliton lent" )
+    plt.plot(xfreq[1:N//10], 2*c*(0*xfreq[1:N//10]+1), "g--", label = "vitesse théorique du soliton rapide" )
     plt.xlabel("$\\xi $")
     plt.legend()
     plt.show()

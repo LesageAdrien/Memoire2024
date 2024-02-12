@@ -41,7 +41,7 @@ I = sps.eye(N,format = "csr", dtype = float)
 def soliton(c,xi):
     return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
-c = 2
+c = 1
 U = soliton(c,X)
 waveheight = np.max(U)
 
@@ -89,7 +89,7 @@ while t<T:
         res = np.max(np.abs(Uk-Uknew))
         Uk = np.copy(Uknew)
         
-    print(i)
+    #print(i)
     Unew = np.copy(Uk)
 
 
@@ -114,9 +114,10 @@ while t<T:
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
     plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
     plt.clf()
-    plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
-    plt.plot(xfreq[:N//10], np.angle(fft(Unew)[:N//10]/fft(U)[:N//10])/dt, label = "déphasage calculé") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
-    plt.plot(xfreq[:N//10], -c*xfreq[:N//10], "k--", label = "déphasage théorique" )
+    plt.ylim(0,2*c)
+    plt.title("Vitesse des harmonique en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
+    plt.plot(xfreq[1:N//10], -np.angle(fft(Unew)[1:N//10]/fft(U)[1:N//10])/dt/xfreq[1:N//10], label = "vitesses calculées") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    plt.plot(xfreq[1:N//10], c*(0*xfreq[1:N//10]+1), "k--", label = "vitesses théoriques" )
     plt.xlabel("$\\xi $")
     plt.legend()
     plt.show()
