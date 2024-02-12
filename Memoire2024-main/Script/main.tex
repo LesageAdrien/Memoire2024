@@ -1,0 +1,494 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{float}
+\usepackage{systeme}
+\setlength{\oddsidemargin}{-18pt}
+\setlength{\evensidemargin}{-18pt}
+\setlength{\textwidth}{481pt}
+\setlength{\textheight}{710pt}
+\setlength{\headheight}{-53pt}
+\setlength{\footskip}{18pt}
+\usepackage[hyperindex]{hyperref}
+\newtheorem{dfn}{\textbf{Définition}}[subsection]
+\newtheorem{thm}[dfn]{\textbf{Théoreme}}
+\newtheorem{prop}[dfn]{\textbf{Proposition}}
+\newtheorem{cor}[dfn]{\textbf{Corollaire}}
+\newtheorem{lem}[dfn]{\textbf{Lemme}}
+\usepackage[nothm]{thmbox}
+
+\newcommand{\rot}{\text{rot}}
+
+\numberwithin{equation}{section}
+\def\proof{\begin{thmbox}[M]{\textbf{Preuve :}}}
+\def\endproof{\end{thmbox}}
+\begin{document}
+\title{Analyse spectrale d'écoulements fluides et modèles d'amortissement}
+\author{Lesage Adrien}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction aux équations d'Euler à surface libre.}
+\subsection{Hypothèses}
+
+Tout le long de ce mémoire, nous nous intéresserons à l'étude d'un fluide dont nous supposerons les hypothèses suivantes vérifiées
+\begin{list}{}{}
+    \item[$(\textbf{H}_1)$ : ] Le fluide est \textit{homogène} et \textit{incompressible}.
+    \item[$(\textbf{H}_2)$ : ] Le fluide est \textit{non visqueux}.
+    \item[$(\textbf{H}_3)$ : ] Le fluide est \textit{irrotationnel}.
+\end{list}
+
+Soit $\textbf{X} = \mathbb{R}^d$ avec $d \in \{1,2\}$. On souhaite étudier un tel fluide évoluant dans le domaine $$\Omega_t = \left\{ (x,z) \in \textbf{X}\times\mathbb{R}  \,|\quad b(x) - H_0 \leq z \leq \zeta(t,x) \,\right\}$$
+\begin{list}{}{}
+\item[\textbullet] $b : \textbf{X}\rightarrow \mathbb{R}$ désigne les variations du fond du fluide, de profondeur caractéristique $H_0 > 0$
+\item[\textbullet] le graphe $\zeta : \mathbb{R}_+\times \textbf{X}$ désigne la surface du fluide, de sorte que les hypothèses suivante soient vérifiées
+\end{list}
+\begin{list}{}{}
+    \item[$(\textbf{H}_4)$ : ] Les particules de fluide ne traversent pas le fond.
+    \item[$(\textbf{H}_5)$ : ] Les particules de fluide ne traversent pas la surface.
+    \item[$(\textbf{H}_6)$ : ]  En tout point $x\in\textbf{X}$ et en tout instant $t\geq 0$, l'épaisseur du fluide $\zeta(t,x) - (b(x)-H_0)$ est supérieure à une constante $H_0>0$ indépendante de $x$ et de $t$.
+    \item[$(\textbf{H}_7)$ : ] La pression  du fluide à la surface est égale à la pression atmosphérique $P_{\text{atm}}$ (on néglige les tensions de surface).
+    \item[$(\textbf{H}_8)$ : ] Le fluide est soumis à une force de gravité d'intensité $g$ et de direction opposée au vecteur $\textbf{z} = (0_{\textbf{X}},1)$.
+    \item[$(\textbf{H}_9)$ : ] Le fluide est au repos à l'infini et $\lim\limits_{\|x\|\rightarrow \infty}\zeta(x,t) = 0$
+\end{list}
+
+\begin{center}
+    \texttt{ajouter schéma}
+\end{center}
+
+
+\subsection{Formulation des équations d'Euler.}
+\subsubsection{Formulation de l'évolution du champ de vitesse}
+Pour commencer, nous allons adopter un point de vue lagrangien:
+\begin{list}{}{}
+    \item[\textbullet] Posons $\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+    \end{array}\right) :  \mathbb{R}_+ \rightarrow \textbf{X}\times\mathbb{R}$ la fonction qui suit le déplacement d'une particule de fluide de position initiale $\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+    \end{array}\right)(0)  \in \Omega_0$.
+    \item[\textbullet] Posons $\textbf{U}(t,x,z)$ la vitesse d'une particule de fluide située en $(x,z) \in \Omega_t$ à l'instant $t$.
+\end{list}
+Les hypothèses $(\textbf{H}_4)$ et $(\textbf{H}_5)$ nous donnent que $\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right)\in \Omega_t$ pour tout instant $t \geq 0$. Ceci nous permet d'écrire
+    
+\begin{equation}
+\frac{d}{dt} \left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right) = U(t,\mathcal{X}(t), \mathcal{Z}(t)) 
+\end{equation}
+
+En dérivant une fois de plus, on obtient 
+$$
+\frac{d^2 }{dt^2}\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right)  = \frac{\partial \textbf{U}(t,\mathcal{X}(t),\mathcal{Z}(t))}{\partial t} + \text{Jac}(\textbf{U})\frac{d}{d t}\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right) 
+$$
+    Ou, autrement dit,
+    
+$$
+\frac{d^2 }{dt^2}\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right)= \left(\frac{\partial\textbf{ U}}{\partial t}+ (\textbf{U}\cdot \nabla ) \textbf{U}\right)(t,\mathcal{X}(t),\mathcal{Z}(t)) 
+$$
+
+Les hypothèses $(\textbf{H}_2)$ nous dit que les particules ne s'influencent pas mutuellement en dehors de la pression. Chaque particule n'est alors soumis qu'à deux forces: la force de gravité $ F_\text{g} = -\rho g\textbf{z}$ et la force de pression $F_\text{P} = - \nabla\textbf{P}$. La deuxième loi de Newton donne alors
+
+$$
+\rho\frac{d^2 }{dt^2}\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right)(t) = - \rho g \textbf{z} -\nabla P(t,X(t),\mathcal{Z}(t))
+$$
+Ce qui nous donne les équations d'Euler définies par le système suivant.
+
+\begin{equation} 
+\tag{$\textbf{E}_1$} \label{eq_E1}
+\rho \left( \frac{\partial U}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U} \right) + \rho g\textbf{z} + \nabla \textbf{P} = 0
+\end{equation}
+
+
+\subsubsection{Formulation de la condition d'incompressibilité}
+L'hypothèse $(\textbf{H}_1)$ se traduit par
+$$\rho(t,x,z) = \rho_0$$
+En conséquence, la loi de conservation de la masse d'un fluide
+\begin{equation} \label{mass_conservation}
+    \frac{\partial \rho}{\partial t} - \text{div}(\rho\textbf{U}) = 0
+\end{equation}
+devient
+\begin{equation} \tag{$\textbf{E}_2$} \label{divergence_free}
+    \text{div} (\textbf{U}) = 0
+\end{equation}
+
+\subsubsection{Formulation des conditions aux bords et de l'évolution de la surface}
+
+L'hypothèse $(\textbf{H}_4)$ s'exprime ainsi
+
+\begin{equation}
+    \tag{${\textbf{E}}_3$} \label{eq_E2}
+    \textbf{U}.\textbf{n} = 0 \text{  sur }\{z = b(x)-H_0\}
+\end{equation} 
+
+où \textbf{n} désigne le vecteur normal extérieur au domaine $\Omega_t$.\\
+
+Cette formule est une réécriture immédiate $(\textbf{H}_4)$  car $b-H_0$ ne dépend pas du temps. En revanche, comme $\zeta$ dépend du temps, la caractérisation de l'hypothèse $(\textbf{H}_5)$ est moins immédiate et est l'objet de la proposition suivante.
+
+
+
+\begin{prop} L'hypothèse $(\textbf{H}_5)$ nous donne que
+    \begin{equation} \tag{$\textbf{E}_4$} \label{eq_E3}
+        \frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2} \textbf{U} \cdot \textbf{n} = 0 \quad\text{dans}\,\{z = \zeta(t,x)\}
+    \end{equation}
+    où $\textbf{n}$ désigne le vecteur normal extérieur au domaine $\Omega_t$
+\end{prop}
+\begin{proof}
+\textit{Etape 1 : }Commençons par déterminer $\textbf{n}$ en fonction de $t$, $x$, et $\zeta$. A $t$ fixé, la surface est paramétrée par l'application $$S_t: x\in \textbf{X} \mapsto \left(\begin{array}{l}
+         x\\
+         \zeta(t,x)
+    \end{array}\right).$$
+Sa différentielle en $x$ est 
+$$DS_t(x) : v \in \textbf{X} \mapsto DS_t(x).v = \left(\begin{array}{l}
+         v\\
+         \nabla_X\zeta(t,x) \cdot v
+    \end{array}\right).$$
+Le vecteur normal \textbf{n} vérifie alors $$\textbf{n}\cdot (DS_t(x).v) = 0$$
+pour tout $v \in \textbf{X}$. En posant $\textbf{n} = \left(\begin{array}{l}
+         n_1\\
+         n_2
+    \end{array}\right)$, on trouve alors
+    $$ \left(n_1 + n_2\nabla_X\zeta(t,x)\right)\cdot v = 0$$
+pour tout $v\in\textbf{X}$. On a alors
+$$ n_1 =  - n_2\nabla_X\zeta(t,x)$$
+Donc $\textbf{n} = n_2\left(\begin{array}{l}
+         - \nabla_X\zeta(t,x)\\
+         1
+    \end{array}\right)$
+Comme la normale est dirigée vers le haut, il vient que $n_2>0$ et comme $\|\textbf{n}\| = 1$, on trouve finalement \begin{equation} \label{normal_surface_vector}
+\textbf{n} = \frac{1}{\sqrt{1+\|\nabla_X\zeta(t,x)\|^2}}\left(\begin{array}{l}
+         - \nabla_X\zeta(t,x)\\
+         1
+    \end{array}\right)\end{equation}
+\textit{Etape 2 : }Considérons à nouveau $\left(\begin{array}{l}
+         \mathcal{X}\\
+         \mathcal{Z}
+\end{array}\right)$ 
+la trajectoire d'une particule et supposons qu'elle est initialement située à la surface. l'hypothèse nous donne qu'alors la particule ne peut traverser la surface ni dans un sens, ni dans l'autre. Il y a alors, pour tout temps $t \geq 0$, l'égalité suivante.
+$$\mathcal{Z} - \zeta( . ,\mathcal{X}) = 0 $$
+En dérivant cette égalité, il vient
+\begin{align*} 
+    0 &= \frac{d\mathcal{Z}}{dt} - \frac{\partial \zeta}{\partial t}(.,\mathcal{X}) - \nabla_\textbf{X}\zeta(.,\mathcal{X}) \cdot \frac{d \mathcal{X}}{dt} \\ 
+    &=  \textbf{U}\cdot  \left(\begin{array}{l}
+         - \nabla_X\zeta(t,x)\\
+         1
+    \end{array}\right) - \frac{\partial \zeta}{\partial t}(.,\mathcal{X}) 
+    \\&= \sqrt{1 + \|\zeta\|^2}\textbf{U}  \cdot \textbf{n} - \frac{\partial \zeta}{\partial t}(.,\mathcal{X}) 
+\end{align*}
+
+
+
+\end{proof}
+
+\paragraph{Pour résumer,} en combinant (\ref{eq_E1}), (\ref{divergence_free}), (\ref{eq_E2}) et (\ref{eq_E3}), on obtient les équations d'Euler à surface libre
+\begin{equation} \tag{\textbf{E}}
+    \left\{ 
+    \begin{aligned}
+        &\rho \left ( \frac{\partial \textbf{U}}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U}+  g\textbf{z}  \right) + \nabla \textbf{P} = 0 & &  
+        \\
+        &\text{div}(\textbf{U}) = 0 & &  
+        \\
+        &\textbf{U}.\textbf{n} = 0 &\text{dans}\,\{z = b(x)-H_0\}& 
+        \\
+        &\frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2} \textbf{U} \cdot \textbf{n} = 0 &\text{dans}\,\{z = \zeta(t,x)\} & 
+    \end{aligned}
+    \right.
+\end{equation}
+\paragraph{Remarque :} L'égalité vectorielle suivante
+$$(\textbf{U}\cdot \nabla ) \textbf{U} = \rot(\textbf{U})\wedge \textbf{U} + \frac{1}{2}\nabla |\textbf{U}|^2$$
+Nous permet de réécrire (\ref{eq_E1}) sous la forme
+\begin{equation} \label{eq_E1bis}
+    \rho \left( \frac{\partial \textbf{U}}{\partial t} +\rot(\textbf{U})\wedge \textbf{U} + \frac{1}{2}\nabla |\textbf{U}|^2+  g\textbf{z}  \right) + \nabla \textbf{P} = 0 
+\end{equation}
+
+Ainsi, l'hypothèse $(\textbf{H}_3)$, qui se traduit par $\rot(\textbf{U})=0$, permet alors d'avoir 
+\begin{equation} \tag{$\textbf{E}_{1,\text{bis}}$} \label{eq_E1bis}
+        \rho \left( \frac{\partial \textbf{U}}{\partial t} +\frac{1}{2}\nabla  |\textbf{U}|^2 +  g\textbf{z}\right) + \nabla \textbf{P} = 0 
+\end{equation}
+
+\subsection{Formulation de Bernoulli}
+
+Grace notament à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connexe à tout instant $t$, et comme $\rot(\textbf{U}) = 0$, on en déduit alors l'existence d'une fonction $\Phi(t,.,.): \textbf{X}\times \mathbb{R} \rightarrow \mathbb{R}$ telle que $$\textbf{U} = \nabla \phi  \;.$$    
+
+Ceci permet de réécrire le système (\ref{eq_E1bis}).
+
+\begin{align*}
+    0 = &\rho \left ( \frac{\partial \nabla \phi }{\partial t} +\frac{1}{2}\nabla  |\nabla \phi|^2  +  g\textbf{z} \right)+ \nabla \textbf{P} 
+    \\
+    =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + \textbf{P} \right)
+    \\
+    =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + \textbf{P}  - \textbf{P}_{\text{atm}}\right)
+\end{align*}
+
+Une condition suffisante pour verifier (\ref{eq_E1bis}) est alors
+\begin{equation} \tag{$\textbf{B}_1$} \label{eq_B1}
+  \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz   = \frac{1}{\rho}\left( \textbf{P}_{\text{atm}}  - \textbf{P}\right)
+\end{equation}
+
+Et comme $\text{div}(\nabla \phi) = \Delta \phi$, la condition d'incompressibilité (\ref{divergence_free}) devient alors
+
+\begin{equation} \tag{$\textbf{B}_2$} \label{eq_B2}
+    \Delta \phi = 0
+\end{equation}
+
+L'équation (\ref{eq_E2}), devient
+
+\begin{equation} \tag{$\textbf{B}_3$} \label{eq_B3}
+    \frac{\partial \phi}{\partial \textbf{n}} = 0 ~~~ \text{dans}\,\{z = b(x)-H_0\} .
+\end{equation}
+
+L'équation (\ref{eq_E3}), devient
+
+\begin{equation} \tag{$\textbf{B}_4$} \label{eq_B4}
+\frac{\partial \zeta}{\partial t}  - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2}\frac{\partial \phi}{\partial\textbf{n}} = 0~~~\text{dans}\,\{z = \zeta(t,x)\} .
+\end{equation}
+
+Sachant (\ref{normal_surface_vector}), on connaît et on utilisera souvent l'équivalence entre (\ref{eq_B4}) et l'équation suivante
+
+
+\begin{equation} \label{eq_B4_bis}
+    \frac{\partial \zeta}{\partial t}  + \nabla_\textbf{X}\zeta\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = \zeta(t,x)\} 
+\end{equation}
+
+De manière analogue, on a aussi équivalence entre (\ref{eq_B3}) et 
+
+\begin{equation} \label{eq_B3_bis}
+    \nabla_\textbf{X}b\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = b(x)\} 
+\end{equation}
+
+
+
+\subsection{Formulation de Craig-Sulem-Zakharov}
+\subsection{Adimensionnement des paramètres du système}
+
+\begin{center}
+    \texttt{ajouter schéma}
+\end{center}
+
+On va chercher à réécrire ces équations en faisant apparaître les rapports entre les différentes grandeurs caractéritiques qui entrent en jeux. Ainsi la négligeabilité d'un paramètre relativement à un autre s'impactera sur nos équation sous la forme d'une possible simplification de un ou plusieurs termes. Une équation ne faisant intervenir que des rapports adimmensionés est dites adimmensionelle. 
+\\
+
+Dans notre cas, les grandeurs caractéristiques de notre système sont
+
+\begin{list}{\textbullet}{}
+    \item $H_0$ est la profondeur du système.
+    \item $a_{\text{surf}} = max(|\zeta|)$ est l'amplitude de la surface du fluide.
+    \item $a_{\text{bot}} = max(|b|)$ est l'amplitude du fond du fluide.
+    \item $L_1$ est la longueur d'onde de $\zeta$ dans la direction $\textbf{e}_1$.
+    \item $L_2$ est la longueur d'onde de $\zeta$ dans la direction transversale $\textbf{e}_2$ (si $\textbf{X} = \mathbb{R}^2)$.
+    
+ \end{list}
+\,
+\\
+
+On étudiera les rapports suivants.
+
+\begin{list}{\textbullet}{}
+    \item $\varepsilon = \frac{a_{\text{surf}}}{H_0}$ le coefficient de \textit{non-linéarité} du système.
+    \item $\mu =\frac{H_0^2}{L_1^2}$ le coefficient de \textit{profondeur}.
+    \item $\beta = \frac{a_{\text{bot}}}{H_0}$ est le coefficient de \textit{dénivellation} du fond.
+    \item $\gamma = \frac{L_1}{L_2}$ est le coefficient de \textit{transversalité}.
+    \item $\epsilon = \frac{ a_{\text{surf}}}{L_1}$ le coefficient d'\textit{amplitude}.
+    \item $t_0 = \frac{L_1}{\sqrt{gH_0}}$ est l'échelle de temps caractéristique.
+\end{list}
+
+~\\
+Pour adimensionner nos équations, on pose l'isomorphisme linéaire suivant:
+
+  
+\begin{equation}
+\begin{aligned}
+      \mathcal{I}:~~&\mathbb{R}\times\textbf{X}\times\mathbb{R} &\longrightarrow ~~~ &\textbf{X}\times \mathbb{R} & \\
+      &(t,(x_1,x_2),z) &\longmapsto &\left(\frac{t}{t_0},\left(\frac{x_1}{L_1},\frac{x_2}{L_2} \right),\frac{z}{H_0}\right) ~~~&\text{si }\textbf{X}=\mathbb{R}^2\\
+      &(t, x ,z) &\longmapsto &\left(\frac{t}{t_0},\frac{x}{L_1},\frac{z}{H_0}\right) ~~~&\text{si }   \textbf{X}=\mathbb{R}
+\end{aligned}
+\end{equation}
+
+    
+   
+    
+
+
+~\\
+
+On effectue le changement de variable suivant.
+
+\begin{list}{\textbullet}{}
+    \item $(t',x',z') = \mathcal{I} (t,x,z)$
+    \item $\zeta' = \dfrac{1}{a_{\text{surf}}}(\zeta \circ \mathcal{I}^{-1})$ 
+    \item $b' = \dfrac{1}{a_{\text{bot}}}(b\circ\mathcal{I}^{-1})$
+     \item $\phi' = \dfrac{1}{g t_0 a_{\text{surf}}}(\phi \circ \mathcal{I}^{-1})$
+     \item $P' = \dfrac{t_0^2}{H_0^2\rho_0} (P \circ \mathcal{I}^{-1})~~~~~~~$   (et $P_{\text{atm}}' = \dfrac{t_0^2}{H_0\rho_0} P_\text{atm}$)
+\end{list}
+
+Ceci nous donne, entre autre, 
+\begin{align}
+    &-1 \leq \zeta' \leq 1\\ &-1 \leq b' \leq 1 
+\end{align}
+\subsubsection{Adimensionnement des équations de Bernoulli pour $\textbf{X} = \mathbb{R}$}
+Pour $\textbf{X} = \mathbb{R}$, l'adimensionnement de (\ref{eq_B1}) s'éffectue ainsi:
+\begin{align}
+    \text{(\ref{eq_B1})} &\Leftrightarrow \frac{g t_0 a_{\text{surf}}}{t_0}\partial_{t'} \phi' + \frac{1}{2}\left(\frac{(g t_0 a_{\text{surf}})^2}{L_1^2}(\partial_{x'}\phi')^2+ \frac{(g t_0 a_{\text{surf}})^2}{H_0^2}(\partial_{z'}\phi')^2\right) + g H_0 z' = \frac{1}{\rho_0}\frac{H_0^2\rho_0}{t_0^2}(P'-P'_{\text{atm}}) \nonumber\\
+    &\text{On factorise le terme non linéaire par $ \frac{(g t_0 a_{\text{surf}})^2 }{L_1^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + (g t_0 a_{\text{surf}})^2\frac{1}{2L_1^2}\left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) + g H_0 z' =  \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On développe $gt_0$ dans ce terme.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     ( \sqrt{g}\frac{L_1}{\sqrt{H_0}} a_{\text{surf}})^2
+     \frac{1}{2L_1^2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On simplifie ce terme.}\nonumber\\
+    &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     \frac{g a_{\text{surf}}^2}{2H_0}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On voit apparaître $\varepsilon$.}\nonumber\\
+     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
+     \varepsilon\frac{g a_{\text{surf}}}{2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + g H_0 z' 
+     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
+     &\text{On divise tout par $g  a_{\text{surf}}$ et on voit à nouveau apparaître $\varepsilon$ et $\mu$}. \nonumber\\
+     &\Leftrightarrow   \partial_{t'} \phi' + 
+     \frac{\varepsilon}{2}
+     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
+     + \frac{z'}{\varepsilon} 
+     = \frac{\mu}{\varepsilon}(P'-P'_{\text{atm}}) \label{eq_B1_adim}
+\end{align}
+\\
+
+L'adimensionnement de (\ref{eq_B2}) s'effectue ainsi:
+\begin{align}
+    \text{(\ref{eq_B2})} &\Leftrightarrow  \frac{(g t_0 a_{\text{surf}})}{L_1^2}\partial_{x' x'}\phi'+ \frac{(g t_0 a_{\text{surf}})}{H_0^2}\partial_{z' z'}\phi'  = 0\nonumber\\
+    &\text{On divise le tout par $ \frac{(g t_0 a_{\text{surf}})^2 }{H_0^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
+    &\Leftrightarrow \partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 \label{eq_B2_adim}
+\end{align}
+
+L'adimensionnement de (\ref{eq_B3}) s'effectue ainsi
+
+\begin{align}
+\text{(\ref{eq_B3})} &\Leftrightarrow \text{(\ref{eq_B3_bis})}& ~ \nonumber\\
+&\Leftrightarrow \partial_x b \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = b(x) - H_0\} \nonumber\\
+&\Leftrightarrow \left(\frac{a_{\text{bot}}}{L_1} \partial_{x'} b'\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
+&\Leftrightarrow  \frac{a_{\text{bot}}H_0}{L_1^2} \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
+&\Leftrightarrow  \beta \mu \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\label{eq_B3_adim}
+\end{align}
+
+L'adimensionnement de (\ref{eq_B4}) s'effectue ainsi
+
+\begin{align}
+\text{(\ref{eq_B4})} &\Leftrightarrow \text{(\ref{eq_B4_bis})}& ~ \nonumber\\
+&\Leftrightarrow \partial_t\zeta + \partial_x \zeta \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = \zeta(x,t)\} \nonumber\\
+&\Leftrightarrow \frac{a_{\text{surf}}}{t_0}\partial_{t'} \zeta' + \left(\frac{a_{\text{surf}}}{L_1} \partial_{x'} \zeta '\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \varepsilon \zeta(t',x')\}\nonumber\\
+&\Leftrightarrow \partial_{t'}\zeta' +  \frac{gt_0^2a_{\text{surf}}}{L_1^2} \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{gt_0^2}{H_0}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \nonumber \\
+&\Leftrightarrow \partial_{t'}\zeta' +  \varepsilon \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{1}{\mu}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \label{eq_B4_adim}
+\end{align}
+
+
+
+
+
+
+Par la suite, lorsqu'on travaillera sur les équations adimensionnées, on se permettra d'omettre les apostrophes sur ces variables.
+\newpage
+\section{Cas du fond plat: Les équations de Korteweg-de Vries} 
+\subsection{Obtention des équations de KdV à partir des équations d'Euler}
+Dans cette partie on s'intéressera au cas où $\textbf{X} = \mathbb{R}$ et $b = 0$. D'après, (\ref{eq_B1_adim}), (\ref{eq_B2_adim}), (\ref{eq_B3_adim}) et (\ref{eq_B4_adim}), on se retrouve alors à étudier le système suivant.
+
+\begin{align}
+~&\partial_{t} \phi + 
+     \frac{\varepsilon}{2}(\partial_{x}\phi)^2+ \frac{\varepsilon}{2\mu}(\partial_{z}\phi)^2
+     + \frac{z}{\varepsilon} 
+     = \frac{\mu}{\varepsilon}(P-P_{\text{atm}}) &\text{ si } -1 < z < \varepsilon \zeta(t,x)\\
+~&\partial_{zz}\phi + \mu \partial_{x x}\phi  = 0  &\text{ si } -1 < z < \varepsilon \zeta(t,x) \label{eq_k2}\\
+~&\partial_{z}\phi = 0&\text{ si } z  = - 1\label{eq_k3}\\
+~&\partial_{t}\zeta +  \varepsilon \partial_{x} \zeta  \partial_{x}\phi  - \frac{1}{\mu}\partial_{z}\phi = 0 &\text{ si } z = \varepsilon \zeta(t,x)
+\end{align}
+
+Plus précisément, on s'intéressera au cas où $\mu << 1$.
+\begin{prop}
+    Si $\phi$ est de classe $2n+2$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$, de classe $2n+2$, telle que
+    \begin{equation}
+        \phi (t,x,z) = \sum_{j = 0}^{n} \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}f}{\partial x^{2j}}(x,t)
+        + (-\mu)^{n+1}\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial x^{2n+2}}(t,x,s)ds
+    \end{equation}
+\end{prop}
+\begin{proof}
+Le développement de Taylor de $\phi$ en $z = -1$, à l'ordre $2n+2$, (avec reste intégrale).
+\begin{equation*}
+\begin{split}
+    \phi(t,x,z) = &\phi(t,x,-1) + (z+1)\frac{\partial \phi}{\partial z}(t,x,-1)\\
+    &+ \frac{(z+1)^2}{2}\frac{\partial^2 \phi}{\partial z^2}(t,x,-1) + \frac{(z+1)^3}{3!}\frac{\partial^3 \phi}{\partial z^3}(t,x,-1)\\
+    & \cdots\\
+    &+ \frac{(z+1)^{2n}}{(2n)!}\frac{\partial^{2n} \phi}{\partial z^{2n}}(t,x,-1) + \frac{(z+1)^{2n+1}}{(2n+1)!}\frac{\partial^{2n+1} \phi}{\partial z^{2n+1}}(t,x,-1)\\
+    &+\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial z^{2n+2}}(t,x,s)ds
+\end{split}
+\end{equation*}
+
+L'équation (\ref{eq_k2}) nous donne, après une récurrence immédiate, pour $z>-1$.
+\begin{equation*}
+    \frac{\partial^{2j} \phi}{\partial z^{2j}}(t,x,z) = (-\mu)^{n}\frac{\partial^{2j} \phi}{\partial x^{2j}}(t,x,z)
+\end{equation*}
+
+\begin{equation*}
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,z) = (-\mu)^{n}\frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,z)
+\end{equation*}
+
+En faisant tendre $z$ vers -1, il vient que les dérivées partielles $\frac{\partial^{k} \phi}{\partial z^{k}}(t,x,z)$ sont bien définies en $z = -1$ et 
+\begin{equation*}
+    \frac{\partial^{2j} \phi}{\partial z^{2j}}(t,x,-1) = (-\mu)^{n}\frac{\partial^{2j} \phi}{\partial x^{2j}}(t,x,-1)
+\end{equation*}
+\begin{equation*}
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = (-\mu)^{n}\frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,-1)
+\end{equation*}
+
+De plus, l'équation (\ref{eq_k3}), nous donne $\frac{\partial \phi}{\partial z}(t,x,-1) = 0$ et donc 
+\begin{equation*}
+    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = 0
+\end{equation*}
+
+Finalement, on obtient
+
+    \begin{equation*}
+        \phi (t,x,z) = \sum_{j = 0}^{n} \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}\phi}{\partial x^{2j}}(t,x,-1)
+        + (-\mu)^{n+1}\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial x^{2n+2}}(t,x,s)ds
+    \end{equation*}
+
+
+Ce qui, si on pose $f(t,x) = \phi(t,x,-1)$, nous donne le résultat.
+
+
+
+\end{proof}
+
+
+
+
+
+\end{document}
+\paragraph{Exemple :} Après ces changements de variables, (\ref{eq_B2}) devient $$\partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 ~~~ \text{si }\textbf{X} = \mathbb{R} $$
+$$\partial_{z'z'}\phi' + \mu \partial_{x_1'x_1'}\phi' + \mu \gamma^2 \partial_{x_2'x_2'}\phi' = 0 ~~~ \text{si }\textbf{X} = \mathbb{R}^2$$

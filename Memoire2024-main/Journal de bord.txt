@@ -1,0 +1,43 @@
+06/02/24
+
+J'ai implémenté les équation de Airy sous python, (KdV sans transport). J'ai utilisé un schéma de type Crank-Nicholson,
+avec pour l'opérateur de dispersion d_{xxx} une matrice B antisymétrique (d'ordre 2) car cela apporte une conservation de la norme L².
+J'y ai affiché:
+	- U en fonction du temps
+	- Û (la transformée de fourier de U (FFT) ) en fonction du temps (partie reel, partie imaginaire, module)
+	- La dérivée de l'argument de Û par rapport au temps (i.e. la dérivée du déphasage de chaque Harmonique)
+Je pense aussi implementer un schéma d'évolution de la transformée de fourier.
+
+J'ai ensuite implémenté KdV à partir du code précédent, en y ajoutant le terme ( u^2 )_x. 
+J'ai implémenté un schéma de type Crank Nicholson en effectuant une méthode de point fixe pour gerer le terme non linéaire.
+J'y ai affiché la même chose que précédemment mais je ne pense pas que regarder le déphasage provoqué par le terme de dispersion soit très pertinent ici pour le moment.
+
+07/02/24
+
+J'ai un petit soucis avec les solitons de KdV.
+Le Temam-Miranville fournis une formulation explicite de ces dernières, c'est relativement bien expliqué sauf la fin où il à l'air de sortir la formule finale de nulle part. 
+J'ai voulu lancer mon code de KdV avec comme fonction de départ un soliton unique mais le soliton se sépare en deux solitons ce qui n'est pas logique. 
+J'ai essayé de voir si ça pouvait avoir dépendre des paramètres de maillage du domaine d'étude (c'est un Tore), mais rien ne change. 
+A poursuivre.
+J'ai finalement trouvé, la formule finale du Temam Miranville était éronnée, la thèse de garnier donne la bonne formule ainsi que la methode pour l'obtenir.
+J'ai remarqué que deux solitons peuvent se traverser sans qu'ils ne s'anihilent.
+En revanche, elles sont légèrement ralenties pendant le chevauchement. Je ne sais pas trop pourquoi pour l'instant. 
+
+08/02/2024
+
+Beaucoup de rédaction aujourd'hui, j'ai proprement adimensionné les équations de Bernoulli dans mon Latek. ça m'a pris beaucoup de temps.
+J'ai commencé à rédiger le début du developpement asymptotique de Euler vers kdV.
+
+Coté numérique, pour l'équation de Airy, je me suis intéréssé à l'effet du choix de notre schéma sur la vitesse de déplacement des harmonique en fonction des fréquences que j'appelle déphasage (en rad/s).
+Pour un thetha schema classique on a un déphasage des harmoniques qui se comporte comme une somme deux termes du type (1/dt) * arctan(dt * frequence^3)
+La solution Théorique de l'équation de Airy a un déphasage de l'ordre de freq^3. 
+Pour une fréquence trop grande, notre theta schéma est mauvais (quelle que soit la valeur de theta).
+Ccl: Il faut se fixer une fréquence limite (probablement dépendant de dt) telle que arctan(dt*freq^3) ~ dt*freq^3
+Ce n'est pas vraiment un problème car on s'interesse à l'étude de vagues de faible fréquences.
+
+J'ai aussi tracé les déphasages théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
+
+
+
+
+
