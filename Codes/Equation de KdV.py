@@ -27,8 +27,8 @@ X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 """Données relative a la FFT"""
 
 xfreq = fftfreq(N,1/N)/(b-a)*2*np.pi
-firstfreq_ratio = 20
-firstfreq = xfreq[:N//firstfreq_ratio]
+firstfreq_ratio = 10
+firstfreq = xfreq[1:N//firstfreq_ratio]
 
 
 """Construction des matrices intervenant dans la boucle"""
@@ -41,9 +41,10 @@ I = sps.eye(N,format = "csr", dtype = float)
 
 #U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
 #U = np.sin(2 * X)
-U = np.exp(-100*(np.sin(X/2/length))**2)
+U = 6 * np.exp(-100*(X)**2)+1
 #U = (np.abs(X)< length/3).astype(float) #signal carré
 #U = np.maximum(0, length/3 - np.abs(X)) #signal triangle
+
 
 waveheight = np.max(np.abs(U))
 
@@ -53,7 +54,7 @@ alpha = 0
 theta = 0.5
 Mat = I + dt*theta*B
 
-dispersive_shift = (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt
+dispersive_shift = (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt/firstfreq
 
 """Placement initial des fenètres"""
 plt.figure(0)
@@ -112,11 +113,11 @@ while t<T:
     plt.pause(0.001)
     
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
-    plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
+    plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (ceci nous donnera ensuite la vitesse des harmoniques de U en fonction de ses fréquences)
     plt.clf()
-    plt.title("Dérivée temporelle du déphasage (en rad/s) en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
-    plt.plot(firstfreq, np.angle(fft(Unew)[:N//firstfreq_ratio]/fft(U)[:N//firstfreq_ratio])/dt) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
-    plt.plot(firstfreq, dispersive_shift,"g--", label =  "Déphasage Dispersif du schéma")
+    plt.title("Vitesse des harmoniques en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
+    plt.plot(firstfreq, np.angle(fft(Unew)[1:N//firstfreq_ratio]/fft(U)[1:N//firstfreq_ratio])/dt/firstfreq) #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    plt.plot(firstfreq, dispersive_shift,"g--", label =  "vitesse provoquée par le terme uxxx")
     plt.xlabel("$\\xi $")
     plt.legend()
     plt.show()
