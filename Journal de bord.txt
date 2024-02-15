@@ -37,6 +37,24 @@ Ce n'est pas vraiment un problème car on s'interesse à l'étude de vagues de f
 
 J'ai aussi tracé les déphasages théoriques des solitons pour KdV, c'est une droite linéaire. Le déphasage calculé semble raccord avec cette droite.
 
+9/02/2024
+Je n'ai pu travailler que la matinée. J'ai complétement remodelé la démonstration concernant le développement limité de phi. 
+J'ai utilisé cette fois ci un developpement de Taylor qui me parait plus intuitif.
+
+12/02
+J'ai repris toutes ces histoire de déphasage et j'ai divisé la dérivée du déphasage par la fréquence. 
+Ceci donne la vitesse de translation de l'harmonique, [~m/s au lieu de ~rad/s]. C'est plus intuitif.
+
+13/02
+J'ai rédigé le développement limité des équations de Bernoulli adimensionnés
+
+14/02 et 13/02
+J'ai étudié en détail et rédigé le développement asymptotique des équations de KdV
+ 
+15/02 
+J'ai rédigé la partie concernant les equations de Airy.
+
+
 
 
 
