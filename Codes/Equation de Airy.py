@@ -28,7 +28,7 @@ X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 xfreq = fftfreq(N,h/(b-a))/(b-a)*2*np.pi
 firstfreq_ratio = 20
 firstfreq = xfreq[1:N//firstfreq_ratio]
-
+v_max = np.max(firstfreq**2)/2
 
 """Construction des matrices intervenant dans la boucle"""
 
@@ -45,7 +45,10 @@ U = 6 * np.exp(-10*(X-length*np.pi)**2)
 #U = (np.abs(X)< length/3).astype(float) #signal carré
 #U = np.maximum(0, 3- np.abs(X - length*np.pi)) #signal triangle
 T = 10; dt = 3e-4 ; t = 0
-theta = 0.5  # 1 <=> Implicite, 0.5<=> Crank Nicholson
+
+xi_for_dt2xi8_is_one = dt**(-1/4)
+
+theta = 0.7  # 1 <=> Implicite, 0.5<=> Crank Nicholson
 waveheight = np.max(np.abs(U))
 
 """Execution de la boucle"""
@@ -54,7 +57,7 @@ plt.get_current_fig_manager().window.setGeometry(30,30,500,450)
 plt.figure(1)
 plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
 plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
-plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
+plt.get_current_fig_manager().window.setGeometry(560,30,700,700)
 while t<T:
   
     
@@ -99,20 +102,23 @@ while t<T:
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
     plt.figure(2) # C'est pour cela qu'on se propose ici de regarder la  dérivée de arg(Û) par rapport au temps (i.e. la vitesse de déphasage des harmoniques de U en fonction de ses fréquences)
     plt.clf()
-    plt.title("vitesse des harmoniques en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
+    plt.ylim(0,v_max)
+    #plt.title("Vitesse des harmoniques en fonction de la fréquence $\\xi$, au temps t="+str(round(t,2)) )
     
-    plt.plot(firstfreq, np.arctan(dt* firstfreq**3)/dt/firstfreq,"k--", label =  "Vitesses pour les shémas Implicite et Explicite")
-    plt.plot(firstfreq, (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt/firstfreq,"g-.", label =  "Vitesses pour theta schéma actuel (theta = "+str(theta)+")")
-    plt.plot(firstfreq, 2*np.arctan(dt/2*firstfreq**3)/dt/firstfreq,"r--", label =  "Vitesses pour le schéma de Crank Nicholson ")
-    
+    plt.plot(firstfreq, np.arctan(dt* firstfreq**3)/dt/firstfreq,"k--", label =  "Vitesses pour les shémas Implicite et Explicite ($\\theta$ = 1 et 0)")
+    plt.plot(firstfreq, (np.arctan(dt* theta * firstfreq**3)+np.arctan(dt*(1-theta)*firstfreq**3))/dt/firstfreq,"g--", label =  "Vitesses pour $\\theta$ schéma actuel ($\\theta$ = "+str(theta)+")")
+    plt.plot(firstfreq, 2*np.arctan(dt/2*firstfreq**3)/dt/firstfreq,"r--", label =  "Vitesses pour le schéma de Crank Nicholson ($\\theta$ = 0.5) ")
     plt.plot(firstfreq, (firstfreq)**2, "y--", label = "Vitesses pour la solution analytique")
-    plt.plot(firstfreq, np.angle(fft(Unew)[1:N//firstfreq_ratio]/fft(U)[1:N//firstfreq_ratio])/dt/firstfreq, label = "Vitesses calculées de la solution numérique") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
+    
+    plt.plot([xi_for_dt2xi8_is_one, xi_for_dt2xi8_is_one],[0,v_max],'r', label = "$\\Delta_t^2\\xi^8 = 1$")
+    plt.plot(firstfreq, np.angle(fft(Unew)[1:N//firstfreq_ratio]/fft(U)[1:N//firstfreq_ratio])/dt/firstfreq,"+", label = "Vitesses calculées numériquement") #On ne regardera que sur les premières fréquences car sinon on risque la division par 0.
     plt.xlabel("$\\xi $")
     plt.ylabel("v")
     plt.legend()
     plt.show()
     plt.pause(0.01)
-    
+    if t==0:
+        break
     """Actualisation de U et de t"""
     U = np.copy(Unew)
     t+=dt

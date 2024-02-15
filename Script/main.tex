@@ -21,6 +21,9 @@
 \newtheorem{lem}[dfn]{\textbf{Lemme}}
 \usepackage[nothm]{thmbox}
 
+\usepackage{graphicx}
+\usepackage{caption}
+
 \newcommand{\rot}{\text{rot}}
 
 \numberwithin{equation}{section}
@@ -804,12 +807,24 @@ Si $\theta < \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 > \|\texttt{U}^n\|^2$ et donc
 
 \paragraph{Choix d'un opérateur de dérivée troisième $B$}\,\\
 
-Pour la suite nous poserons pour B l'opérateur suivant
+Pour la suite nous poserons pour $B$ l'opérateur suivant
 \begin{align*}
         B : l^2(\mathbb{Z}) &\longrightarrow l^2(\mathbb{Z})\\
         (\texttt{v}_i)_{i\in\mathbb{Z}} &\mapsto \left(\frac{\texttt{v}_{i-2} - 2\texttt{v}_{i-1} + 2\texttt{v}_{i+1}-\texttt{v}_{i+2} }{2(\Delta_x)^3}\right)_{i\in\mathbb{Z}}
 \end{align*}
 
+\subsubsection{Implémentation numérique}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.5]{graphs/v_xi en fonction de dt.pdf}
+    \caption{Vitesse des harmoniques en fonction de la fréquence pour $\Delta_t = 3\times10^{-4}$}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Etude numérique de l'équation de KdV}
+\subsubsection{Schéma numérique}
+\subsubsection{Les solitons}
 
 \end{document}
 \paragraph{Exemple :} Après ces changements de variables, (\ref{eq_B2}) devient $$\partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 ~~~ \text{si }\textbf{X} = \mathbb{R} $$
