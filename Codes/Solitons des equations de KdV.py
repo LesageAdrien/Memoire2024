@@ -19,7 +19,7 @@ def D_mat(N,h):
 
 """Données relative à la discrétisation du Tore"""
 
-length = 30
+length = 4
 a = -length/2*np.pi; b = length/2*np.pi 
 N = 250
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
@@ -41,9 +41,10 @@ I = sps.eye(N,format = "csr", dtype = float)
 def soliton(c,xi):
     return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
-c = 1
+c = 4
 U = soliton(c,X)
 waveheight = np.max(U)
+wavedepth = np.min(U)
 
 
 T = 400; dt = 1e-1 ; t = 0
@@ -71,7 +72,7 @@ while t<T:
     plt.clf()
     plt.plot(X,soliton(c,X-c*t),"k--", label = "soliton théorique")
     plt.plot(X,U, "b", label = "soliton simulé")
-    plt.ylim(0,waveheight+0.5)
+    plt.ylim(wavedepth-0.5,waveheight+0.5)
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
     plt.xlabel("x")
     plt.legend()

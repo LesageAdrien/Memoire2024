@@ -415,21 +415,23 @@ L'adimensionnement de (\ref{eq_B4}) s'effectue ainsi
 
 Par la suite, lorsqu'on travaillera sur les équations adimensionnées, on se permettra d'omettre les apostrophes sur ces variables.
 \newpage
-\section{Cas du fond plat: Les équations de Korteweg-de Vries} 
-\subsection{Obtention des équations de KdV à partir des équations d'Euler}
+\section{Cas du fond plat 1D} 
+
 Dans cette partie on s'intéressera au cas où $\textbf{X} = \mathbb{R}$ et $b = 0$. D'après, (\ref{eq_B1_adim}), (\ref{eq_B2_adim}), (\ref{eq_B3_adim}) et (\ref{eq_B4_adim}), on se retrouve alors à étudier le système suivant.
 
 \begin{align}
 ~&\partial_{t} \phi + 
      \frac{\varepsilon}{2}(\partial_{x}\phi)^2+ \frac{\varepsilon}{2\mu}(\partial_{z}\phi)^2
      + \frac{z}{\varepsilon} 
-     = \frac{\mu}{\varepsilon}(P-P_{\text{atm}}) &\text{ si } -1 < z < \varepsilon \zeta(t,x)\\
+     = \frac{\mu}{\varepsilon}(P-P_{\text{atm}}) &\text{ si } -1 < z < \varepsilon \zeta(t,x) \label{eq_k1}\\
 ~&\partial_{zz}\phi + \mu \partial_{x x}\phi  = 0  &\text{ si } -1 < z < \varepsilon \zeta(t,x) \label{eq_k2}\\
 ~&\partial_{z}\phi = 0&\text{ si } z  = - 1\label{eq_k3}\\
-~&\partial_{t}\zeta +  \varepsilon \partial_{x} \zeta  \partial_{x}\phi  - \frac{1}{\mu}\partial_{z}\phi = 0 &\text{ si } z = \varepsilon \zeta(t,x)
+~&\partial_{t}\zeta +  \varepsilon \partial_{x} \zeta  \partial_{x}\phi  - \frac{1}{\mu}\partial_{z}\phi = 0 &\text{ si } z = \varepsilon \zeta(t,x)\label{eq_k4}
 \end{align}
 
-Plus précisément, on s'intéressera au cas où $\mu << 1$.
+Plus précisément, on s'intéressera au cas d'une vague unidirectionnelle en supposant $\mu << 1$ et $\varepsilon<<1$.
+\subsection{Développement asymptotique de $\phi$}
+
 \begin{prop}
     Si $\phi$ est de classe $2n+2$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$, de classe $2n+2$, telle que
     \begin{equation}
@@ -466,9 +468,9 @@ En faisant tendre $z$ vers -1, il vient que les dérivées partielles $\frac{\pa
     \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = (-\mu)^{n}\frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,-1)
 \end{equation*}
 
-De plus, l'équation (\ref{eq_k3}), nous donne $\frac{\partial \phi}{\partial z}(t,x,-1) = 0$ et donc 
+De plus, l'équation (\ref{eq_k3}), nous donne $\frac{\partial \phi}{\partial z}(t,x,-1) = 0$ pour tout $x\in \textbf{X}$ et donc 
 \begin{equation*}
-    \frac{\partial^{2j+1} \phi}{\partial z^{2j+1}}(t,x,-1) = 0
+    \frac{\partial^{2j}}{\partial x^{2j}}\frac{\partial \phi}{\partial z}(t,x,-1) = 0
 \end{equation*}
 
 Finalement, on obtient
@@ -480,13 +482,333 @@ Finalement, on obtient
 
 
 Ce qui, si on pose $f(t,x) = \phi(t,x,-1)$, nous donne le résultat.
-
-
-
 \end{proof}
 
+Ainsi, on se retrouve gràce à l'hypothèse ($\textbf{H}_9$) [\texttt{Arguments complémentaires à ajouter}] avec les approximation suivantes.
+
+\begin{equation}
+    \begin{split}
+            &\phi = f - \mu\frac{(z+1)^2}{2}\partial_{xx}f + \mu^2\frac{(z+1)^4}{24}\partial_{xxxx}f + \mathcal{O}(\mu^3)\\
+            &\partial_z\phi = -\mu(z+1)\partial_{xx}f + \mu^2\frac{(z+1)^3}{6}\partial_{xxxx}f + \mathcal{O}(\mu^3)\\
+            &\partial_x\phi = \partial_xf - \mu\frac{(z+1)^2}{2}\partial_{xxx}f + \mathcal{O}(\mu^2)
+    \end{split}
+\end{equation}
+\paragraph{En injectant ces équations dans (\ref{eq_k4}):}
+Lorsque $z = \varepsilon \zeta(t,x)$, on se retrouve avec l'expression suivante
+\begin{equation*}
+    \partial_{t}\zeta +  \varepsilon \partial_{x} \zeta  \left[\partial_xf - \mu\frac{(z+1)^2}{2}\partial_{xxx}f + \mathcal{O}(\mu^2) \right]  +  (z+1) \partial_{xx}f - \mu\frac{(z+1)^3}{6}\partial_{xxxx}f + \mathcal{O}(\mu^2) = 0
+\end{equation*}
+que l'on peut réécrire ainsi.
+\begin{equation*}
+    \partial_{t}\zeta +  \partial_{x}(\varepsilon \zeta+1) \partial_xf+  (\varepsilon\zeta+1) \partial_{xx}f    - \mu\frac{(\varepsilon\zeta+1)^3}{6}\partial_{xxxx}f - \mu \varepsilon\partial_{x}\zeta\frac{(\varepsilon\zeta+1)^2}{2}\partial_{xxx}f= \mathcal{O}(\mu^2) + \mathcal{O}(\varepsilon\mu^2) 
+\end{equation*}
+
+Où encore
+
+\begin{equation}
+    \partial_{t}\zeta +  \partial_{x}((\varepsilon \zeta+1) \partial_xf)    - \mu\frac{(\varepsilon\zeta+1)^3}{6}\partial_{xxxx}f - \mu \varepsilon\partial_{x}\zeta\frac{(\varepsilon\zeta+1)^2}{2}\partial_{xxx}f= \mathcal{O}(\mu^2) + \mathcal{O}(\varepsilon\mu^2) \label{eq_approx1} 
+\end{equation}
+\paragraph{En injectant ces équations dans (\ref{eq_k1}):} Lorsque $z = \varepsilon \zeta(t,x)$, on se retrouve avec $P -P_{atm} = 0$ et il vient alors l'expression suivante.
+
+\begin{equation*}
+\begin{split}
+    \partial_{t}\left[f - \mu\frac{(z+1)^2}{2}\partial_{xx}f + \mathcal{O}(\mu^2)\right] 
+    &+\frac{\varepsilon}{2}\left(\partial_xf - \mu\frac{(z+1)^2}{2}\partial_{xxx}f + \mathcal{O}(\mu^2)\right)^2 
+     \\&+\frac{\varepsilon}{2\mu}\left(\mu(z+1)\partial_{xx}f + \mu^2\frac{(z+1)^3}{6}\partial_{xxxx}f + \mathcal{O}(\mu^3)\right)^2
+     \\&+ \frac{z}{\varepsilon} 
+     = 0
+\end{split}
+\end{equation*}
+que l'on peut réécrire
+\begin{equation}
+\begin{split}
+   \left[ \partial_{t}f - \mu\frac{(\varepsilon\zeta+1)^2}{2}\partial_{xxt}f + \mathcal{O}(\mu^2)\right] 
+    &+\frac{\varepsilon}{2}\left(  (\partial_xf)^2 -  \mu(\varepsilon\zeta+1)^2 \partial_xf\partial_{xxx}f \right) + \mathcal{O}(\varepsilon\mu^2)   
+     \\&+\frac{\varepsilon\mu}{2}(\varepsilon\zeta+1)^2(\partial_{xx}f)^2 +  \mathcal{O}(\varepsilon\mu^2) 
+     \\&+  \zeta 
+     = 0
+\end{split}\label{eq_approx2} 
+\end{equation}
+\subsection{Vers les équations de Korteweg-de Vries.}
+\begin{center}
+    --------------------------------------------\\
+   \textit{Premièrement, on néglige tous les termes d'ordre 1 ou plus en $\mu$ et en $\varepsilon$}\\
+   \textit{"on remplace $\mathcal{O}(\mu,\varepsilon)$ par 0"}\\
+   --------------------------------------------
+\end{center}
+
+Si $\mu = \varepsilon = 0$ dans (\ref{eq_approx1}) et (\ref{eq_approx2}) on obtient le système suivant
+
+\begin{align}
+    &\partial_t\zeta + \partial_{xx}f = 0 \label{eq_prekdv_1}  \tag{$\texttt{h}_1^{\mathcal{O}^0}$}\\
+    &\partial_tf + \zeta = 0 \label{eq_prekdv_2} \tag{$\texttt{h}_2^{\mathcal{O}^0}$}
+\end{align}
+
+En combinant (\ref{eq_approx2}) et la dérivée de (\ref{eq_prekdv_1}) par rapport à $t$, on trouve
+
+\begin{align}
+    &\partial_{tt} \zeta - \partial_{xx}\zeta = 0 \label{eq_wave}\\
+    &\partial_{xx} \zeta + \partial_{xx}f = 0 \label{eq_duality}
+\end{align}
+
+L'équation (\ref{eq_wave}) s'appelle équation des ondes. Une solution unidirectionnelle de cette équation est de la forme $\zeta(x,t) = g(x-t)$. Ce qui nous donne
+\begin{equation*}
+    \partial_x\zeta = - \partial_t \zeta 
+\end{equation*}
+De cette équation et à partir de (\ref{eq_prekdv_1}) et (\ref{eq_prekdv_2}),  on obtient que 
+\begin{align*}
+   &\partial_x(\partial_xf-\zeta) = \partial_{xx}f+\partial_t\zeta = 0\\
+   &\partial_t(\partial_xf-\zeta) = \partial_{xt}f+\partial_x\zeta = \partial_{x}(\partial_{t}f+\zeta) = 0
+\end{align*}
+Autrement dit, $\partial_xf-\zeta = 0$
+
+\begin{center}
+    --------------------------------------------\\
+    \textit{Deuxièmement, on corrige le résultat obtenu en ajoutant des termes d'un ordre supérieur.}\\
+   \textit{"on remplace 0 par $\mathcal{O}(\mu,\varepsilon)$"}\\
+   --------------------------------------------
+\end{center}
+Supposons désormais vraies les assertions suivantes
+\begin{align}
+    &\partial_xf - \zeta = \mu A + \varepsilon B + \mathcal{O}(\mu^2+\varepsilon^2) \label{hyp_prekdv1} \tag{$\texttt{h}_1^{\mathcal{O}^1}$} \\
+    & \partial_x \zeta + \partial_t\zeta = \mathcal{O}(\mu, \varepsilon) \label{hyp_prekdv2} \tag{$\texttt{h}_2^{\mathcal{O}^1}$}
+\end{align}
+
+Si on dérive (\ref{eq_approx2}) par rapport à $x$ et si on néglige les termes de l'ordre de $\mu^2$, de $\mu\varepsilon$ et de $\varepsilon^2$ dans (\ref{eq_approx1}) et (\ref{eq_approx2}), on obtient le système suivant
+\begin{align*}
+    &\partial_t\zeta+\partial_x((\varepsilon\zeta + 1)\partial_xf) - \mu\frac{1}{6}\partial_{xxxx}f = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)\\
+    &\partial_{xt}f - \mu \frac{1}{2}\partial_{xxxt}f + \varepsilon\partial_xf\partial_{xx}f + \zeta_x = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)
+\end{align*}
+
+En remplaçant les dérivées de $f$ de ce système respectivement à l'hypothèse (\ref{hyp_prekdv1}) et en continuant de négliger les termes d'ordre strictement supérieur à 1 en $\mu$ et $\varepsilon$, il vient le système suivant
+
+\begin{align*}
+    &\partial_t\zeta+\partial_x((\varepsilon\zeta + 1)\zeta) + \partial_x(\mu A + \varepsilon B) - \mu\frac{1}{6}\partial_{xxx}\zeta = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)\\
+    &\partial_t \zeta + \mu\partial_tA+\varepsilon\partial_tB - \mu \frac{1}{2}\partial_{xxt}\zeta + \varepsilon\zeta\partial_{x}\zeta + \partial_x \zeta = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)
+\end{align*}
+
+Toujours dans l'optique de négliger les termes d'ordre élevés, lorsque $\mu$ ou $\varepsilon$ est en facteur d'une dérivée temporelle de $\zeta$ on peut la remplacer par la dérivée spatiale correspondante grâce à l'hypothèse (\ref{hyp_prekdv2}). Ce qui nous amène au système suivant
+\begin{align*}
+    &\partial_t\zeta +\partial_x((\varepsilon\zeta + 1)\zeta) + \partial_x(\mu A + \varepsilon B) - \mu\frac{1}{6}\partial_{xxx}\zeta = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)\\
+    &\partial_t \zeta + \mu\partial_tA+\varepsilon\partial_tB + \mu \frac{1}{2}\partial_{xxx}\zeta + \varepsilon\zeta\partial_{x}\zeta + \partial_x \zeta = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)
+\end{align*}
+
+On peut réécrire ce système ainsi
+\begin{align}
+    &\partial_t\zeta + \partial_x\zeta + \mu  \big( \partial_x A - \frac{1}{6}\partial_{xxx}\zeta \big) + \varepsilon  \big( 2\zeta\partial_x\zeta + \partial_x B \big) = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2) \label{eq_withAandB} \\
+    &\partial_t\zeta + \partial_x\zeta + \mu  \big( \partial_t A + \frac{1}{2}\partial_{xxx}\zeta \big) + \varepsilon  \big(  \zeta\partial_x\zeta + \partial_t B \big) = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)\notag
+\end{align}
+
+Par unicité [\texttt{Argument discutable}] du développement asymptotique, on a alors
+\begin{align*}
+    & \partial_x A - \frac{1}{6}\partial_{xxx}\zeta = \partial_t A + \frac{1}{2}\partial_{xxx}\zeta + \mathcal{O}(\mu, \varepsilon)\\
+    &2\zeta\partial_x\zeta + \partial_x B =\zeta\partial_x\zeta + \partial_t B + \mathcal{O}(\mu, \varepsilon)
+\end{align*}
+
+On cherche deux fonction $A$ et $B$ qui conviennent, c'est à dire deux fonctions vérifiant 
+\begin{align}
+    & \partial_x A -\partial_t A =  \frac{2}{3}\partial_{xxx}\zeta  + \mathcal{O}(\mu, \varepsilon)\label{eq_A_tosolve}\\
+    &\partial_t B - \partial_x B =\zeta\partial_x\zeta  + \mathcal{O}(\mu, \varepsilon)\label{eq_B_tosolve}
+\end{align}
+
+Supposant connu $\zeta$, résolvons (\ref{eq_A_tosolve}) et (\ref{eq_B_tosolve}) à l'aide du changement de variable $s = x+t$, et $r = x-t$:
+
+Ce qui donne pour toute fonction $d\in \{\zeta,A,B\}$
+\begin{align}
+    \tilde{d}(s,r) &= d\left(\frac{s+r}{2}, \frac{s-r}{2}\right)\\
+    \partial_s\tilde{d}(s,r) &= \frac{1}{2}\left(\partial_xd + \partial_td\right)\left(\frac{s+r}{2}, \frac{s-r}{2}\right)\\
+    \partial_r\tilde{d}(s,r) &= \frac{1}{2} \left(\partial_xd - \partial_td\right)\left(\frac{s+r}{2}, \frac{s-r}{2}\right)\label{eq_dxdr1}
+\end{align}
+
+D'après (\ref{hyp_prekdv2}), on trouve alors $\partial_s\tilde{\zeta} = \mathcal{O}(\mu, \varepsilon)$, et comme $\partial_x\zeta = (\partial_s\tilde{\zeta} + \partial_r\tilde{\zeta})(x+t, x-t)$ il vient alors que
+\begin{equation}
+    \partial_x\zeta = \partial_r\tilde{\zeta}(x+t,x-t) + \mathcal{O}(\mu,\varepsilon) \label{eq_dxdr2}
+\end{equation}
+
+En injectant (\ref{eq_dxdr1}), (\ref{eq_dxdr2}) dans (\ref{eq_A_tosolve}) et dans (\ref{eq_B_tosolve}) il vient
+\begin{align*}
+    2\partial_r\tilde{A} &= \frac{2}{3}\partial_{rrr}\tilde\zeta  +\mathcal{O}(\mu,\varepsilon)\\
+    -2\partial_r\tilde{B} &= \tilde\zeta\partial_r\tilde\zeta +\mathcal{O}(\mu,\varepsilon)
+\end{align*}
+
+On peut donc prendre 
+
+\begin{align*}
+    \tilde{A} &= \frac{1}{3}\partial_{rr}\tilde\zeta \\
+    \tilde{B} &= \frac{-\tilde\zeta^2}{4}
+\end{align*}
+
+et donc 
+\begin{align*}
+    A &= \frac{1}{3}\partial_{xx}\zeta \\
+    B &= \frac{-\zeta^2}{4}
+\end{align*}
+Finalement l'équation (\ref{eq_withAandB}) devient
+
+\begin{equation*}
+    \partial_t\zeta + \partial_x\zeta + \mu  \frac{1}{6}\partial_{xxx}\zeta + \varepsilon  \frac{2}{3}\zeta\partial_x\zeta  = \mathcal{O}(\mu^2, \mu\varepsilon, \varepsilon^2)
+\end{equation*}
+
+\begin{center}
+    --------------------------------------------\\
+   \textit{Finalement, on néglige tous les termes d'ordre 2 ou plus en $\mu$ et en $\varepsilon$}\\
+   \textit{"on remplace $\mathcal{O}(\mu^2, \mu\varepsilon,\varepsilon^2)$ par 0"}\\
+   --------------------------------------------
+\end{center}
+
+En considérant l'équation 
+
+\begin{equation}
+    \partial_t\zeta + \partial_x\zeta + \mu  \frac{1}{6}\partial_{xxx}\zeta + \varepsilon  \frac{2}{3}\zeta\partial_x\zeta  = 0 \label{eq_KdV_beforechvar}
+\end{equation}
+
+Par un changement de variable on peut se ramener à l'étude d'une équation ne dépendant plus des paramètre $\mu$ et $\varepsilon$ . En effet, en posant $u(x,t) = \zeta(kx-lt,lt)$ , il vient
+
+\begin{equation*}
+    \frac{1}{l}\partial_tu + \mu  \frac{1}{6k^3}\partial_{xxx}u + \varepsilon  \frac{2}{3k}u\partial_xu  = 0
+\end{equation*}
+
+Et en posant $k = \dfrac{\sqrt{\mu}}{2\varepsilon}$ et $ l =\dfrac{3\sqrt{\mu}}{4\varepsilon^2}$, on obtient finalement les équations de KdV
 
 
+\begin{equation}
+    \partial_tu + \partial_{xxx}u +u\partial_xu  = 0 \label{KdV}\tag{\textbf{KdV}}
+\end{equation}
+\paragraph{Remarque:} Dans le cas d'une vague de très faible amplitude ($1>>\mu>>\varepsilon$), le troisième terme de (\ref{eq_KdV_beforechvar}) disparaît.  Avec un changement de variable analogue à l'obtention de (\ref{KdV}), on obtient alors les équations de Airy.
+
+\begin{equation}
+    \partial_tu + \partial_{xxx}u = 0 \label{Airy}\tag{\textbf{Airy}}
+\end{equation}
+
+\subsection{ Analyse spectrale et numérique de l'équation de Airy}
+L'équation (\ref{Airy}) est une équation linéaire simple à résoudre. Il est toutefois très intéressant d'étudier les différents schémas numériques qui permettent de modéliser cette équation d'évolution. Pour cause, connaître l'action de ces schémas sur cette équation nous permettra de connaître, avec précision, l'effet de nos futurs schémas sur le terme de dispersion $\partial_{xxx}u$ de l'équation de (\ref{KdV}).
+\\
+\subsubsection{Analyse qualitative de l'équation}
+En connaissant la condition initiale $u(\cdot,0) = u_0$, on connaît, analytiquement, la solution $u$ en tout temps. En effet, si $\hat{u}$ désigne la transformée de Fourier de $u$, l'équation (\ref{Airy}) devient
+
+\begin{equation*}
+    \partial_t\hat{u}(\xi, t) - i\xi^3\hat{u}(\xi, t) = 0
+\end{equation*}
+
+ce qui nous donne alors
+\begin{equation*}
+    \hat{u}(\xi, t) = e^{it\xi^3}\hat{u_0}(\xi)
+\end{equation*}.
+
+\paragraph{Première conséquence :} Nous avons la conservation de la norme $L^2$ de $u$.
+\begin{equation}
+    \|u\|_{L^2}(t) = \|\hat{u}\|_{L^2}(t) =\|e^{it\xi^3}\hat{u_0}\|_{L^2} =  \|\hat{u_0}\|_{L^2} =  \|u_0\|_{L^2} 
+\end{equation}
+
+Nous nous intéresserons alors à l'utilisation de schémas qui conservent cette norme de sorte qu'il n'y ait ni dissipation d'énergie, ni création d'instabilité.
+
+\paragraph{Deuxième conséquence :} Les harmoniques de $u$ son conservées et se déplacent à vitesse $v_\xi$ constante en temps dépendant de la fréquence $\xi$. La translation d'une harmonique se traduit par le déphasage du coefficients de Fourier associé. Plus précisément, 
+
+\begin{equation}
+\begin{split}
+    v_\xi &= \frac{1}{\xi}\partial_t (\text{Arg}(\hat{u}(\xi,\cdot)))
+    \\ &= \frac{1}{\xi}\partial_t (t\xi^3) 
+    \\ &= \xi^2
+\end{split}
+\end{equation}
+
+Nous essaierons alors au mieux de nous concentrer sur l'utilisation de schémas apportant une vitesse des harmoniques la plus fidèle possible.
+
+\subsubsection{ Discrétisation en temps: }
+Commençons par discrétiser la variable temporelle uniformément. Posons $t^n = n\Delta_t$, et intéressons à l'approximation $\texttt{U}^n \approx u(\cdot,t^n)$ générée par le $\theta-$schéma si dessous.
+\begin{equation}
+\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + \partial_{xxx}(\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}) = 0 
+\end{equation}
+
+Les transformées de Fourier $\widehat{\texttt{U}^n}$ vérifient alors
+\begin{equation*}
+\frac{\widehat{\texttt{U}^{n+1}}-\widehat{\texttt{U}^n}}{\Delta_t} - i \xi^3(\theta\widehat{\texttt{U}^{n+1}} + (1-\theta)\widehat{\texttt{U}^{n}}) = 0 
+\end{equation*}
+
+Ce qui donne 
+\begin{equation*}
+\widehat{\texttt{U}^{n+1}} = \frac{1 + i (1-\theta)\Delta_t\xi^3}{1 - i\theta \Delta_t\xi^3 }\widehat{\texttt{U}^{n}}  
+\end{equation*}
+
+\paragraph{Étude de la conservation de la norme $L^2$ de notre schéma}\,
+\\
+
+Si $\theta < \frac{1}{2}$, on a l'inégalité $\left|\frac{1 + i (1-\theta)\Delta_t\xi^3}{1 - i\theta \Delta_t\xi^3 }\right|>1 $  et donc le $\theta-$schéma est instable au sens de la norme $L^2$.\\
+
+Si $\theta > \frac{1}{2}$, on a l'inégalité $\left|\frac{1 + i (1-\theta)\Delta_t\xi^3}{1 - i\theta \Delta_t\xi^3 }\right|<1 $ et donc la norme $L^2$ décroît.\\
+
+Si $\theta = \frac{1}{2}$, on a l'inégalité $\left|\frac{1 + i (1-\theta)\Delta_t\xi^3}{1 - i\theta \Delta_t\xi^3 }\right| = 1$ et donc la norme $L^2$ est conservée, c'est le schéma de Crank-Nicholson.\\
+
+\paragraph{Étude de l'évolution des harmoniques de $\texttt{U}^n$:} 
+On souhaite avoir une estimation de la vitesse de chaque harmonique de $\texttt{U}^n$, pour cela nous allons approcher $v_\xi$ par $ \texttt{v}_\xi^{\Delta_t}$ définie par
+\begin{equation}
+\begin{split}
+     \texttt{v}_\xi^{\Delta_t} &= \frac{1}{\xi}\left( \frac{\text{Arg}(\widehat{\texttt{U}}^{n+1}) - \text{Arg}(\widehat{\texttt{U}}^{n})}{\Delta_t} \right)
+    \\ & =\frac{1}{\Delta_t\xi}\left(\text{Arg}\left( \frac{\widehat{\texttt{U}}^{n+1}}{\widehat{\texttt{U}}^{n}}\right)\right) 
+    \\ & = \frac{1}{\Delta_t\xi}\left(\text{Arg}\left(\frac{1 + i (1-\theta)\Delta_t\xi^3}{1 - i\theta \Delta_t\xi^3 }\right)\right)
+    \\ & = \frac{1}{\Delta_t\xi}\left(\text{Arg}\left(1 + i (1-\theta)\Delta_t\xi^3\right)- \text{Arg}\left(1 - i\theta \Delta_t\xi^3 \right)\right)
+    \\ & = \frac{1}{\Delta_t\xi}\left(\text{Arctan}((1-\theta)\Delta_t\xi^3)+\text{Arctan}(\theta\Delta_t\xi^3)\right)
+\end{split}
+\end{equation}
+
+Le développement limité de Arctan en 0 nous donne alors
+
+\begin{equation}
+    \texttt{v}_\xi^{\Delta_t} = \xi^2 - \frac{1}{3}\left((1-\theta)^3+\theta^3\right)\Delta_t^2\xi^8 + \mathcal{O}((\Delta_t)^4) 
+\end{equation}
+
+On s'assurera pour la suite de vérifier $\Delta_t^2\xi^8 << 1$. Autrement dit, on imposera $$\Delta_t << \left(\frac{1}{\xi_\text{max}}\right)^4$$.
+\paragraph{Remarque :} Le $\theta$ qui minimise le second terme de ce développement limité est $\theta = \frac{1}{2}$. Le schéma de Crank Nicholson est donc le meilleur ici aussi.
+
+\subsubsection{Discrétisation temps et en espace :}
+Discrétisons désormais aussi la variable d'espace. Posons $x_j = j\Delta_x$ pour tout $j\in\mathbb{Z}$ et intéressons nous à l'approximation $\texttt{U}^n_j \approx u(x_j,t^n)$, définie par le schéma suivant
+\begin{equation}
+\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + B(\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}) = 0 \label{num_scheme_general}
+\end{equation}
+où $\texttt{U}^{n+1}$ désigne cette fois la suite $(\texttt{U}^n_j)_{j\in\mathbb{Z}}$ et où B est un opérateur linéaire que nous déterminerons plus tard mais que nous supposerons antisymétrique.\\
+
+\paragraph{Étude de la conservation de la norme $L^2$ de notre schéma}\,\\
+
+Désignons par $<\cdot,\cdot>$ le produit scalaire associé à l'espace de Hilbert $l^2(\mathbb{Z})$ définit par $$<\texttt{u},\texttt{v} > = \sum\limits_{i\in\mathbb{Z}}\texttt{u}_i\texttt{v}_i\Delta_x$$ et observons l'évolution de $\texttt{U}^n$ pour la norme associée. Pour cela on effectue le produit scalaire des termes de l'équation (\ref{num_scheme_general}) par $ \texttt{V}^n_\theta = (\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n})$. Ceci donne
+
+\begin{equation}
+    <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{V}^n_\theta >+ \Delta_t < B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = 0 \label{num_scheme_L2_stability_eq_1}
+\end{equation}
+Comme $B$ est antisymétrique, il vient 
+$$< B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = < \texttt{V}^n_\theta , B^T\texttt{V}^n_\theta  > = -< B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = 0$$
+Et donc (\ref{num_scheme_L2_stability_eq_1}) devient
+
+\begin{equation}
+\begin{split}
+    0  &=   <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n} + \theta(\texttt{U}^{n+1}  - \texttt{U}^{n})> 
+    \\ &=   <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n}>  + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n})\|^2
+    \\ &=   <\texttt{U}^{n+1}, \texttt{U}^{n}>-  \|\texttt{U}^{n}\|^2 + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n}\|^2
+    \\ &=   \frac{1}{2}\left(\|\texttt{U}^{n+1}\|^2+ \|\texttt{U}^n\|^2 - \|\texttt{U}^{n+1}- \texttt{U}^n\|^2\right)-  \|\texttt{U}^{n}\|^2 + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n}\|^2
+    \\ &=   \frac{1}{2}\left(\|\texttt{U}^{n+1}\|^2 - \|\texttt{U}^n\|^2 - (1 - 2\theta) \|\texttt{U}^{n+1}-  \texttt{U}^{n}\|^2 \right)
+\end{split}
+\end{equation}
+
+Autrement dit, 
+
+\begin{equation}
+    \|\texttt{U}^{n+1}\|^2 = \|\texttt{U}^n\|^2 + (1 - 2\theta) \|\texttt{U}^{n+1}-  \texttt{U}^{n}\|^2
+\end{equation}
+
+On en déduit que:\\
+
+Si $\theta = \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 = \|\texttt{U}^n\|^2$ et donc la norme $L^2$ numérique est conservée.\\
+
+Si $\theta > \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 < \|\texttt{U}^n\|^2$ et donc la norme $L^2$ décroît. (il y a dissipation d'énergie)\\
+
+Si $\theta < \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 > \|\texttt{U}^n\|^2$ et donc la norme $L^2$ croît. (le schéma est instable)\\
+
+\paragraph{Choix d'un opérateur de dérivée troisième $B$}\,\\
+
+Pour la suite nous poserons pour B l'opérateur suivant
+\begin{align*}
+        B : l^2(\mathbb{Z}) &\longrightarrow l^2(\mathbb{Z})\\
+        (\texttt{v}_i)_{i\in\mathbb{Z}} &\mapsto \left(\frac{\texttt{v}_{i-2} - 2\texttt{v}_{i-1} + 2\texttt{v}_{i+1}-\texttt{v}_{i+2} }{2(\Delta_x)^3}\right)_{i\in\mathbb{Z}}
+\end{align*}
 
 
 \end{document}
