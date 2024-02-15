@@ -52,7 +52,18 @@ J'ai rédigé le développement limité des équations de Bernoulli adimensionn�
 J'ai étudié en détail et rédigé le développement asymptotique des équations de KdV
  
 15/02 
-J'ai rédigé la partie concernant les equations de Airy.
+J'ai rédigé la partie concernant les equations de Airy. J'ai détaillé la stabilité des theta-schéma. 
+
+Premièrement, j'ai résolu analytiquement l'équation par la transformée de fourier comme Mr Chehab m'avait montré. 
+J'en ai profité pour dériver l'argument de la transformée de fourier et divisé par la fréquence ce qui me donne la vitesse théorique des harmonique (c'est fréquence au carré). 
+
+Deuxièmement, j'ai discrétisé uniquement la variable de temps et j'ai utilisé la transformée de fourier pour étudier la stabilité au sens de Von Neumann. 
+J'en ai profité pour étudier la dérivée discrete de l'argument de la transformée de fourier. 
+Ceci me donne une vitesse des harmonique qui s'écrit en fonction des fonctions arctan.
+J'ai effectué un developpement limité de arctan pour estimer l'erreur de vitesse engrendrée par le schéma. (de l'ordre de Dt^2*xi^8) 
+
+Finalement j'ai discrétisé l'espace en montrant qu'on conserve une stabilité L2.
+J'ai ajouté un graphique pour illustrer la vitesses des harmoniques.
 
 
 
