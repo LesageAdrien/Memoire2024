@@ -18,7 +18,7 @@ def B_mat(N,h):
 
 length = 1
 a = 0; b = length * 2*np.pi 
-N = 700
+N = 450
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
@@ -26,7 +26,7 @@ X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 """Données relative a la FFT"""
 
 xfreq = fftfreq(N,h/(b-a))/(b-a)*2*np.pi
-firstfreq_ratio = 20
+firstfreq_ratio = 12
 firstfreq = xfreq[1:N//firstfreq_ratio]
 v_max = np.max(firstfreq**2)/2
 
@@ -48,7 +48,7 @@ T = 10; dt = 3e-4 ; t = 0
 
 xi_for_dt2xi8_is_one = dt**(-1/4)
 
-theta = 0.7  # 1 <=> Implicite, 0.5<=> Crank Nicholson
+theta = 0.5  # 1 <=> Implicite, 0.5<=> Crank Nicholson
 waveheight = np.max(np.abs(U))
 
 """Execution de la boucle"""
@@ -91,9 +91,9 @@ while t<T:
     plt.clf()
     plt.ylim(-1,1)
     plt.title("Transformée de fourier")
-    plt.plot(xfreq[:N//2], np.real(y[:N//2]),"b", label= "Re(Û)") #la fonction U étant à valeurs réelles, sa FFT est une fonction paire. On ne regardera alors que la restriction à R+ de cette fonction.
-    plt.plot(xfreq[:N//2], np.imag(y[:N//2]),"r", label= "Im(Û)") 
-    plt.plot(xfreq[:N//2], np.abs(y[:N//2]),"k", label= "|Û|")
+    plt.plot(firstfreq, np.real(y[1:N//firstfreq_ratio]),"b", label= "Re(Û)") #la fonction U étant à valeurs réelles, sa FFT est une fonction paire. On ne regardera alors que la restriction à R+ de cette fonction.
+    plt.plot(firstfreq, np.imag(y[1:N//firstfreq_ratio]),"r", label= "Im(Û)") 
+    plt.plot(firstfreq, np.abs(y[1:N//firstfreq_ratio]),"k", label= "|Û|")
     plt.xlabel("$\\xi $")
     plt.legend()
     plt.show()
@@ -117,8 +117,6 @@ while t<T:
     plt.legend()
     plt.show()
     plt.pause(0.01)
-    if t==0:
-        break
     """Actualisation de U et de t"""
     U = np.copy(Unew)
     t+=dt
