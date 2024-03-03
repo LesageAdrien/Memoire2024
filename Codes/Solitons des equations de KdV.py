@@ -19,9 +19,9 @@ def D_mat(N,h):
 
 """Données relative à la discrétisation du Tore"""
 
-length = 4
+length = 16
 a = -length/2*np.pi; b = length/2*np.pi 
-N = 250
+N = 700
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
@@ -47,7 +47,7 @@ waveheight = np.max(U)
 wavedepth = np.min(U)
 
 
-T = 400; dt = 1e-1 ; t = 0
+T = 400; dt = 1e-2 ; t = 0
 
 alpha = 0
 theta = 0.5
