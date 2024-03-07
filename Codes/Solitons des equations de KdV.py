@@ -19,9 +19,9 @@ def D_mat(N,h):
 
 """Données relative à la discrétisation du Tore"""
 
-length = 4
+length = 16
 a = -length/2*np.pi; b = length/2*np.pi 
-N = 250
+N = 700
 X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
 
 
@@ -41,14 +41,13 @@ I = sps.eye(N,format = "csr", dtype = float)
 def soliton(c,xi):
     return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
-c = 4
-U = soliton(c,X)
+c = 1
+U = soliton(c, X)
 waveheight = np.max(U)
 wavedepth = np.min(U)
 
 
-T = 400; dt = 1e-1 ; t = 0
-
+T = 400; dt = 1e-1; t = 0; itercounter = 0; itertosave = int(20/dt)
 alpha = 0
 theta = 0.5
 Mat = I + dt*theta*B
@@ -58,27 +57,35 @@ Mat = I + dt*theta*B
 # plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
 # plt.figure(1)
 # plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
-plt.figure(0)
-plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
-plt.figure(1)
-plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
-plt.figure(2) 
-plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
+#plt.figure(0)
+#plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
+#plt.figure(1)
+#plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
+#plt.figure(2)
+#plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
 """Execution de la boucle"""
 while t<T:
+
+
     """Affichage de U au temps t"""
     
     plt.figure(0)
     plt.clf()
-    plt.plot(X,soliton(c,X-c*t),"k--", label = "soliton théorique")
+    #plt.plot(X,soliton(c,X-c*t),"k--", label = "soliton théorique")
     plt.plot(X,U, "b", label = "soliton simulé")
     plt.ylim(wavedepth-0.5,waveheight+0.5)
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
     plt.xlabel("x")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
-    
+    if itercounter == itertosave:
+        plt.savefig("Soliton_t1.pdf")
+    elif itercounter == 0:
+        plt.savefig("Soliton_t0.pdf")
+
+    itercounter += 1
+
     """Calcul du prochain U"""
     
     res = 1
@@ -109,7 +116,7 @@ while t<T:
     plt.plot(xfreq[:N//2], np.abs(y[:N//2]),"k", label= "|Û|")
     plt.xlabel("$\\xi $")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
     
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
@@ -121,7 +128,7 @@ while t<T:
     plt.plot(xfreq[1:N//10], c*(0*xfreq[1:N//10]+1), "k--", label = "vitesses théoriques" )
     plt.xlabel("$\\xi $")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
     
     """Actualisation de U et de t"""
