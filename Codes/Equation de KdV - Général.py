@@ -41,7 +41,7 @@ I = sps.eye(N,format = "csr", dtype = float)
 
 #U = np.sin(2*X) + 0.1*np.sin(3*X) + 0.2 *np.sin(10 * X)
 #U = np.sin(2 * X)
-U = 6 * np.exp(-100*(X)**2)+1
+U = 6 * np.exp(-30*(X)**2)+1
 #U = (np.abs(X)< length/3).astype(float) #signal carré
 #U = np.maximum(0, length/3 - np.abs(X)) #signal triangle
 
