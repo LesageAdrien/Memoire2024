@@ -2,11 +2,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage[francais]{babel}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{stmaryrd}
 \usepackage{float}
 \usepackage{systeme}
+
+\usepackage{tikz}
 \setlength{\oddsidemargin}{-18pt}
 \setlength{\evensidemargin}{-18pt}
 \setlength{\textwidth}{481pt}
@@ -19,8 +22,7 @@
 \newtheorem{prop}[dfn]{\textbf{Proposition}}
 \newtheorem{cor}[dfn]{\textbf{Corollaire}}
 \newtheorem{lem}[dfn]{\textbf{Lemme}}
-\usepackage[nothm]{thmbox}
-
+\AtBeginEnvironment{proof}{\footnotesize}
 \usepackage{graphicx}
 \usepackage{caption}
 
@@ -34,8 +36,6 @@
 \bibliography{sample.bib}
 
 \numberwithin{equation}{section}
-\def\proof{\begin{thmbox}[M]{\textbf{Preuve :}}}
-\def\endproof{\end{thmbox}}
 \begin{document}
 \title{Analyse spectrale d'écoulements fluides et modèles d'amortissement}
 \author{Lesage Adrien}
@@ -43,7 +43,7 @@
 \newpage
 \tableofcontents
 \newpage
-\section{Introduction aux équations d'Euler à surface libre.}
+\section{Introduction aux équations d'Euler à surface libre}
 \subsection{Hypothèses}
 
 Tout le long de ce mémoire, nous nous intéresserons à l'étude d'un fluide dont nous supposerons les hypothèses suivantes vérifiées
@@ -69,12 +69,29 @@ Soit $\textbf{X} = \mathbb{R}^d$ avec $d \in \{1,2\}$. On souhaite étudier un t
     \item[$(\textbf{H}_9)$ : ] Le fluide est au repos à l'infini et $\lim\limits_{\|x\|\rightarrow \infty}\zeta(x,t) = 0$
 \end{list}
 
-\begin{center}
-    \texttt{ajouter schéma}
-\end{center}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.5]
+        % Axes
+        \draw[->] (-0.2,0) -- (5.5,0) node[right] {$x$};
+        \draw[->] (0,-1.3) -- (0,0.5) node[above] {$z$};
+        
+        % Courbes de surface
+        \draw[thick, domain=0.4:5, smooth, variable=\x, blue] plot ({\x},{0.05*sin(3*\x +1 r)-0.1*sin(2*\x r)}) node[above] {$\zeta$};
+        \draw[thick,dashed, domain=0.1:5.4, smooth, variable=\x, blue] plot ({\x},{0.05*sin(3*\x +1 r)-0.1*sin(2*\x r)}) ;
+        
+        \draw[thick, domain=0.4:5, smooth, variable=\x, red] plot ({\x},{-1 - 0.05*sin(\x +1 r) - 0.1*sin(2*\x r)}) node[above] {$b - H_0$};
+        \draw[thick, domain=0.1:5.4, dashed, smooth, variable=\x, red] plot ({\x},{-1 - 0.05*sin(\x +1 r) - 0.1*sin(2*\x r)});
 
+        \node at (-0.4,0) {$0$};
+        \node at (-0.4,-1) {$-H_0$};
+        \node at (2.15,-0.5) {$\Omega_t$};
+    \end{tikzpicture}
+    \caption{Représentation des équations d'Euler à surface libre}
+    \label{fig:surface}
+\end{figure}
 
-\subsection{Formulation des équations d'Euler.}
+\subsection{Formulation des équations d'Euler}
 \subsubsection{Formulation de l'évolution du champ de vitesse}
 Pour commencer, nous allons adopter un point de vue lagrangien:
 \begin{list}{}{}
@@ -85,18 +102,18 @@ Pour commencer, nous allons adopter un point de vue lagrangien:
          \mathcal{X}\\
          \mathcal{Z}
     \end{array}\right)(0)  \in \Omega_0$.
-    \item[\textbullet] Posons $\textbf{U}(t,x,z)$ la vitesse d'une particule de fluide située en $(x,z) \in \Omega_t$ à l'instant $t$.
+    \item[\textbullet] Posons $\textbf{U}(t,x,z)$ la vitesse de la particule de fluide située en $(x,z) \in \Omega_t$ à l'instant $t$.
 \end{list}
 Les hypothèses $(\textbf{H}_4)$ et $(\textbf{H}_5)$ nous donnent que $\left(\begin{array}{l}
          \mathcal{X}\\
          \mathcal{Z}
-\end{array}\right)\in \Omega_t$ pour tout instant $t \geq 0$. Ceci nous permet d'écrire
+\end{array}\right)\in \Omega_t$ pour tout instant $t \geq 0$. On a alors la relation
     
 \begin{equation}
 \frac{d}{dt} \left(\begin{array}{l}
          \mathcal{X}\\
          \mathcal{Z}
-\end{array}\right) = U(t,\mathcal{X}(t), \mathcal{Z}(t)) 
+\end{array}\right) = \textbf{U}(t,\mathcal{X}(t), \mathcal{Z}(t)) 
 \end{equation}
 
 En dérivant une fois de plus, on obtient 
@@ -115,10 +132,10 @@ $$
 \frac{d^2 }{dt^2}\left(\begin{array}{l}
          \mathcal{X}\\
          \mathcal{Z}
-\end{array}\right)= \left(\frac{\partial\textbf{ U}}{\partial t}+ (\textbf{U}\cdot \nabla ) \textbf{U}\right)(t,\mathcal{X}(t),\mathcal{Z}(t)) 
+\end{array}\right)= \left(\frac{\partial\textbf{U}}{\partial t}+ (\textbf{U}\cdot \nabla ) \textbf{U}\right)(t,\mathcal{X}(t),\mathcal{Z}(t)) 
 $$
 
-Les hypothèses $(\textbf{H}_2)$ nous dit que les particules ne s'influencent pas mutuellement en dehors de la pression. Chaque particule n'est alors soumis qu'à deux forces: la force de gravité $ F_\text{g} = -\rho g\textbf{z}$ et la force de pression $F_\text{P} = - \nabla\textbf{P}$. La deuxième loi de Newton donne alors
+L' hypothèse $(\textbf{H}_2)$ nous dit que les particules ne s'influencent pas mutuellement en dehors de la pression. Chaque particule n'est alors soumis qu'à deux forces: la force de gravité $ F_\text{g} = -\rho g\textbf{z}$ due à l'hypothèse $(\textbf{H}_8)$ et la force de pression $F_\text{P} = - \nabla P$ ou la fonction $P$ désigne la pression du fluide. La deuxième loi de Newton donne alors
 
 $$
 \rho\frac{d^2 }{dt^2}\left(\begin{array}{l}
@@ -130,7 +147,7 @@ Ce qui nous donne les équations d'Euler définies par le système suivant.
 
 \begin{equation} 
 \tag{$\textbf{E}_1$} \label{eq_E1}
-\rho \left( \frac{\partial U}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U} \right) + \rho g\textbf{z} + \nabla \textbf{P} = 0
+\rho \left( \frac{\partial \textbf{U}}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U} \right) + \rho g\textbf{z} + \nabla P = 0
 \end{equation}
 
 
@@ -157,7 +174,7 @@ L'hypothèse $(\textbf{H}_4)$ s'exprime ainsi
 
 où \textbf{n} désigne le vecteur normal extérieur au domaine $\Omega_t$.\\
 
-Cette formule est une réécriture immédiate $(\textbf{H}_4)$  car $b-H_0$ ne dépend pas du temps. En revanche, comme $\zeta$ dépend du temps, la caractérisation de l'hypothèse $(\textbf{H}_5)$ est moins immédiate et est l'objet de la proposition suivante.
+Cette formule est une réécriture immédiate de $(\textbf{H}_4)$  car $b-H_0$ ne dépend pas du temps. En revanche, comme $\zeta$ dépend du temps, la caractérisation de l'hypothèse $(\textbf{H}_5)$ est moins immédiate et est l'objet de la proposition suivante.
 
 
 
@@ -165,7 +182,7 @@ Cette formule est une réécriture immédiate $(\textbf{H}_4)$  car $b-H_0$ ne d
     \begin{equation} \tag{$\textbf{E}_4$} \label{eq_E3}
         \frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2} \textbf{U} \cdot \textbf{n} = 0 \quad\text{dans}\,\{z = \zeta(t,x)\}
     \end{equation}
-    où $\textbf{n}$ désigne le vecteur normal extérieur au domaine $\Omega_t$
+    où $\textbf{n}$ désigne le vecteur normal extérieur au domaine $\Omega_t$.
 \end{prop}
 \begin{proof}
 \textit{Etape 1 : }Commençons par déterminer $\textbf{n}$ en fonction de $t$, $x$, et $\zeta$. A $t$ fixé, la surface est paramétrée par l'application $$S_t: x\in \textbf{X} \mapsto \left(\begin{array}{l}
@@ -189,17 +206,17 @@ Donc $\textbf{n} = n_2\left(\begin{array}{l}
          - \nabla_X\zeta(t,x)\\
          1
     \end{array}\right)$
-Comme la normale est dirigée vers le haut, il vient que $n_2>0$ et comme $\|\textbf{n}\| = 1$, on trouve finalement \begin{equation} \label{normal_surface_vector}
+Pour que la normale soit dirigée vers l'exterieur du domaine $\Omega_t$, il faut $n_2>0$. Comme $\|\textbf{n}\| = 1$, on trouve finalement \begin{equation} \label{normal_surface_vector}
 \textbf{n} = \frac{1}{\sqrt{1+\|\nabla_X\zeta(t,x)\|^2}}\left(\begin{array}{l}
          - \nabla_X\zeta(t,x)\\
          1
-    \end{array}\right)\end{equation}
+    \end{array}\right).\end{equation}
 \textit{Etape 2 : }Considérons à nouveau $\left(\begin{array}{l}
          \mathcal{X}\\
          \mathcal{Z}
 \end{array}\right)$ 
-la trajectoire d'une particule et supposons qu'elle est initialement située à la surface. l'hypothèse nous donne qu'alors la particule ne peut traverser la surface ni dans un sens, ni dans l'autre. Il y a alors, pour tout temps $t \geq 0$, l'égalité suivante.
-$$\mathcal{Z} - \zeta( . ,\mathcal{X}) = 0 $$
+la trajectoire d'une particule et supposons qu'elle est initialement située à la surface. L'hypothèse nous donne qu'alors la particule ne peut traverser la surface ni dans un sens, ni dans l'autre. Il y a alors, pour tout temps $t \geq 0$, l'égalité suivante:
+$$\mathcal{Z} - \zeta( . ,\mathcal{X}) = 0 .$$
 En dérivant cette égalité, il vient
 \begin{align*} 
     0 &= \frac{d\mathcal{Z}}{dt} - \frac{\partial \zeta}{\partial t}(.,\mathcal{X}) - \nabla_\textbf{X}\zeta(.,\mathcal{X}) \cdot \frac{d \mathcal{X}}{dt} \\ 
@@ -217,15 +234,12 @@ En dérivant cette égalité, il vient
 \paragraph{Pour résumer,} en combinant (\ref{eq_E1}), (\ref{divergence_free}), (\ref{eq_E2}) et (\ref{eq_E3}), on obtient les équations d'Euler à surface libre
 \begin{equation} \tag{\textbf{E}}
     \left\{ 
-    \begin{aligned}
-        &\rho \left ( \frac{\partial \textbf{U}}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U}+  g\textbf{z}  \right) + \nabla \textbf{P} = 0 & &  
-        \\
-        &\text{div}(\textbf{U}) = 0 & &  
-        \\
-        &\textbf{U}.\textbf{n} = 0 &\text{dans}\,\{z = b(x)-H_0\}& 
-        \\
-        &\frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2} \textbf{U} \cdot \textbf{n} = 0 &\text{dans}\,\{z = \zeta(t,x)\} & 
-    \end{aligned}
+    \begin{split}
+        &\rho \left ( \frac{\partial \textbf{U}}{\partial t} + (\textbf{U}\cdot \nabla ) \textbf{U}+  g\textbf{z}  \right) + \nabla \textbf{P} = 0 &\, \\
+        &\text{div}(\textbf{U}) = 0 &\, \\
+        &\textbf{U}.\textbf{n} = 0 &~~\text{dans}\,\{z = b(x)-H_0\}\\
+        &\frac{\partial \zeta}{\partial t}(t,x) - \sqrt{1+ \| \nabla_\textbf{X}\zeta\|^2} \textbf{U} \cdot \textbf{n} = 0 &\text{dans}\,\{z = \zeta(t,x)\} 
+    \end{split}
     \right.
 \end{equation}
 \paragraph{Remarque :} L'égalité vectorielle suivante
@@ -242,27 +256,32 @@ Ainsi, l'hypothèse $(\textbf{H}_3)$, qui se traduit par $\rot(\textbf{U})=0$, p
 
 \subsection{Formulation de Bernoulli}
 
-Grace notament à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connexe à tout instant $t$, et comme $\rot(\textbf{U}) = 0$, on en déduit alors l'existence d'une fonction $\Phi(t,.,.): \textbf{X}\times \mathbb{R} \rightarrow \mathbb{R}$ telle que $$\textbf{U} = \nabla \phi  \;.$$    
+Grâce notamment à $(\textbf{H}_6)$, on sait que $\Omega_t$ est simplement connexe à tout instant $t$, et comme $\rot(\textbf{U}) = 0$ par l'hypothèse $(\textbf{H}_3)$, on en déduit l'existence d'une fonction $\Phi(t,.,.): \textbf{X}\times \mathbb{R} \rightarrow \mathbb{R}$ telle que $$\textbf{U} = \nabla \phi  \;.$$    
 
-Ceci permet de réécrire le système (\ref{eq_E1bis}).
+Ceci permet de réécrire le système (\ref{eq_E1bis}):
 
 \begin{align*}
-    0 = &\rho \left ( \frac{\partial \nabla \phi }{\partial t} +\frac{1}{2}\nabla  |\nabla \phi|^2  +  g\textbf{z} \right)+ \nabla \textbf{P} 
+    0 = &\rho \left ( \frac{\partial \nabla \phi }{\partial t} +\frac{1}{2}\nabla  |\nabla \phi|^2  +  g\textbf{z} \right)+ \nabla P 
     \\
-    =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + \textbf{P} \right)
-    \\
-    =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + \textbf{P}  - \textbf{P}_{\text{atm}}\right)
+    =&\nabla \left ( \rho \left ( \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz \right) + P \right)
 \end{align*}
 
 Une condition suffisante pour vérifier (\ref{eq_E1bis}) est alors
-\begin{equation} \tag{$\textbf{B}_1$} \label{eq_B1}
-  \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz   = \frac{1}{\rho}\left( \textbf{P}_{\text{atm}}  - \textbf{P}\right)
-\end{equation}
+\begin{equation*} 
+  \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz   = \frac{1}{\rho}\left( - P\right)
+\end{equation*}
 
-Et comme $\text{div}(\nabla \phi) = \Delta \phi$, la condition d'incompressibilité (\ref{divergence_free}) devient alors
+
+
+De plus, comme $\phi$ n'est définie qu'à une constante indépendante de l'espace près et comme seules les dérivées de $\phi$ par rapport aux variables d'espace interviennent dans les équations, on peut aussi poser
+\begin{equation} \tag{$\textbf{B}_1$} \label{eq_B1}
+  \frac{\partial \phi }{\partial t} +\frac{1}{2}|\nabla \phi|^2 +  gz   = \frac{1}{\rho}\left(P_\text{atm} - P\right)
+\end{equation}
+Où la constante $P_\text{atm}$ désigne la pression de l'air ambiant, supposée constante. De cette façon, par l'hypothèse $(\textbf{H}_7)$, la pression disparaît de cette équation sur la surface $\{z = \zeta(t,x)\}$.
+Et comme $\text{div}(\nabla \phi) = \Delta \phi$, l'équation (\ref{divergence_free}) devient alors
 
 \begin{equation} \tag{$\textbf{B}_2$} \label{eq_B2}
-    \Delta \phi = 0
+    \Delta \phi = 0.
 \end{equation}
 
 L'équation (\ref{eq_E2}), devient
@@ -281,23 +300,44 @@ Sachant (\ref{normal_surface_vector}), on connaît et on utilisera souvent l'éq
 
 
 \begin{equation} \label{eq_B4_bis}
-    \frac{\partial \zeta}{\partial t}  + \nabla_\textbf{X}\zeta\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = \zeta(t,x)\} 
+    \frac{\partial \zeta}{\partial t}  + \nabla_\textbf{X}\zeta\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans }\{z = \zeta(t,x)\} .
 \end{equation}
 
 De manière analogue, on a aussi équivalence entre (\ref{eq_B3}) et 
 
 \begin{equation} \label{eq_B3_bis}
-    \nabla_\textbf{X}b\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans}\{z = b(x)\} 
+    \nabla_\textbf{X}b\cdot\nabla_\textbf{X}\phi - \frac{\partial\phi}{\partial z} = 0 ~~~\text{dans }\{z = b(x)\} .
 \end{equation}
 
 
 \subsection{Adimensionnement des paramètres du système}
 
-\begin{center}
-    \texttt{ajouter schéma}
-\end{center}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.5]
+        % Axes
+        \draw[->] (-0.2,0) -- (5.5,0) node[right] {$x$};
+        \draw[->] (0,-2.8) -- (0,0.5) node[above] {$z$};
 
-Tout comme dans \cite{MT} et  \cite{Lannes}, on va commencer par réécrire ces équations en faisant apparaître les rapports entre les différentes grandeurs caractéristiques qui entrent en jeu. Ainsi la négligeabilité d'un paramètre relativement à un autre s'impactera sur nos équation sous la forme d'une possible simplification de un ou plusieurs termes. Une équation ne faisant intervenir que des rapports adimmensionés est dites adimmensionelle. 
+        \draw[ gray] (-0.1,-2.5) -- (5.5,-2.5);
+        % Courbes de surface
+        \draw[very thick, domain=0.4:5, smooth, variable=\x, blue] plot ({\x},{0.2*sin(3*\x +1 r)-0.4*sin(2*\x r)}) node[above] {$\zeta$};
+        \draw[very thick,dashed, domain=0.1:5.4, smooth, variable=\x, blue] plot ({\x},{0.2*sin(3*\x +1 r)-0.4*sin(2*\x r)}) ;
+        
+        \draw[very thick, domain=0.4:5, smooth, variable=\x, red] plot ({\x},{-2.5 - 0.2*sin(\x +1 r) - 0.4*sin(2*\x r)}) node[above] {$b - H_0$};
+        \draw[very thick, domain=0.1:5.4, dashed, smooth, variable=\x, red] plot ({\x},{-2.5 - 0.2*sin(\x +1 r) - 0.4*sin(2*\x r)});
+
+        \node at (-0.4,0) {$0$};
+        \node at (-0.4,-2.5) {$-H_0$};
+
+        \draw[->, dashed, gray] (2.3,0) -- (2.3,{0.2*sin(3*2.3 +1 r)-0.4*sin(2*2.3 r)}) node[midway, right] {$a_\text{surf}$};
+        \draw[->, dashed, gray] (3.9,-2.5) -- (3.9,{-2.5 - 0.2*sin(3.9 +1 r) - 0.4*sin(2*3.9 r)}) node[midway, right] {$a_\text{bot}$};
+        \draw[->, dashed, gray] (1,-0.22) -- (3.8,-0.22) node[below, midway] {$L_1$};
+    \end{tikzpicture}
+    \caption{Représentation des grandeurs caractéristiques pour $\textbf{X} = \mathbb{R}$ }
+    \label{fig:surface}
+\end{figure}
+Tout comme dans \cite{MT} et  \cite{Lannes}, on va commencer par réécrire ces équations en faisant apparaître les rapports entre les différentes grandeurs caractéristiques qui entrent en jeu. Ainsi la négligeabilité d'un paramètre relativement à un autre s'impactera sur nos équations sous la forme d'une possible simplification de un ou plusieurs termes. Une équation ne faisant intervenir que des rapports adimmensionés est dites adimmensionée (ou adimensionnelle). 
 \\
 
 Dans notre cas, les grandeurs caractéristiques de notre système sont
@@ -313,7 +353,7 @@ Dans notre cas, les grandeurs caractéristiques de notre système sont
 \,
 \\
 
-On étudiera les rapports suivants.
+On étudiera les rapports suivants:
 
 \begin{list}{\textbullet}{}
     \item $\varepsilon = \frac{a_{\text{surf}}}{H_0}$ le coefficient de \textit{non-linéarité} du système.
@@ -343,7 +383,7 @@ Pour adimensionner nos équations, on pose l'isomorphisme linéaire suivant:
 
 ~\\
 
-On effectue le changement de variable suivant.
+On effectue le changement de variable suivant:
 
 \begin{list}{\textbullet}{}
     \item $(t',x',z') = \mathcal{I} (t,x,z)$
@@ -353,74 +393,100 @@ On effectue le changement de variable suivant.
      \item $P' = \dfrac{t_0^2}{H_0^2\rho_0} (P \circ \mathcal{I}^{-1})~~~~~~~$   (et $P_{\text{atm}}' = \dfrac{t_0^2}{H_0\rho_0} P_\text{atm}$)
 \end{list}
 
-Ceci nous donne, entre autre, 
-\begin{align}
-    &-1 \leq \zeta' \leq 1\\ &-1 \leq b' \leq 1 
-\end{align}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.5]
+        % Axes
+        \draw[->] (-0.2,0) -- (5.5,0) node[right] {$x'$};
+        \draw[->] (0,-2.8) -- (0,0.5) node[above] {$z'$};
+
+        \draw[ gray] (-0.1,-2.5) -- (5.5,-2.5);
+        % Courbes de surface
+        \draw[very thick, domain=0.4:5, smooth, variable=\x, blue] plot ({\x},{0.2*sin(3*\x +1 r)-0.4*sin(2*\x r)}) node[above] {$\varepsilon\zeta'$};
+        \draw[very thick,dashed, domain=0.1:5.4, smooth, variable=\x, blue] plot ({\x},{0.2*sin(3*\x +1 r)-0.4*sin(2*\x r)}) ;
+        
+        \draw[very thick, domain=0.4:5, smooth, variable=\x, red] plot ({\x},{-2.5 - 0.2*sin(\x +1 r) - 0.4*sin(2*\x r)}) node[above] {$\beta b' - 1$};
+        \draw[very thick, domain=0.1:5.4, dashed, smooth, variable=\x, red] plot ({\x},{-2.5 - 0.2*sin(\x +1 r) - 0.4*sin(2*\x r)});
+
+        \node at (-0.4,0) {$0$};
+        \node at (-0.4,-2.5) {$-1$};
+
+        \draw[->, dashed, gray] (2.3,0) -- (2.3,{0.2*sin(3*2.3 +1 r)-0.4*sin(2*2.3 r)}) node[midway, right] {$\mathcal{O}(\varepsilon)$};
+        \draw[->, dashed, gray] (3.9,-2.5) -- (3.9,{-2.5 - 0.2*sin(3.9 +1 r) - 0.4*sin(2*3.9 r)}) node[midway, right] {$\mathcal{O}(\beta)$};
+        \draw[->, dashed, gray] (1,-0.22) -- (3.8,-0.22) node[below, midway] {$\mathcal{O}(1)$};
+    \end{tikzpicture}
+    \caption{Représentation des courbes adimensionnées}
+    \label{fig:surface}
+\end{figure}
 \subsubsection{Adimensionnement des équations de Bernoulli pour $\textbf{X} = \mathbb{R}$}
-Pour $\textbf{X} = \mathbb{R}$, l'adimensionnement de (\ref{eq_B1}) s'éffectue ainsi:
-\begin{align}
-    \text{(\ref{eq_B1})} &\Leftrightarrow \frac{g t_0 a_{\text{surf}}}{t_0}\partial_{t'} \phi' + \frac{1}{2}\left(\frac{(g t_0 a_{\text{surf}})^2}{L_1^2}(\partial_{x'}\phi')^2+ \frac{(g t_0 a_{\text{surf}})^2}{H_0^2}(\partial_{z'}\phi')^2\right) + g H_0 z' = \frac{1}{\rho_0}\frac{H_0^2\rho_0}{t_0^2}(P'-P'_{\text{atm}}) \nonumber\\
-    &\text{On factorise le terme non linéaire par $ \frac{(g t_0 a_{\text{surf}})^2 }{L_1^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
-     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + (g t_0 a_{\text{surf}})^2\frac{1}{2L_1^2}\left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) + g H_0 z' =  \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
-     &\text{On développe $gt_0$ dans ce terme.}\nonumber\\
-     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
-     ( \sqrt{g}\frac{L_1}{\sqrt{H_0}} a_{\text{surf}})^2
-     \frac{1}{2L_1^2}
-     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
-     + g H_0 z' 
-     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
-     &\text{On simplifie ce terme.}\nonumber\\
-    &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
-     \frac{g a_{\text{surf}}^2}{2H_0}
-     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
-     + g H_0 z' 
-     = \frac{H_0^2  }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
-     &\text{On voit apparaître $\varepsilon$.}\nonumber\\
-     &\Leftrightarrow  g  a_{\text{surf}} \partial_{t'} \phi' + 
-     \varepsilon\frac{g a_{\text{surf}}}{2}
-     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
-     + g H_0 z' 
-     = \frac{H_0^2 }{t_0^2}(P'-P'_{\text{atm}})\nonumber\\
-     &\text{On divise tout par $g  a_{\text{surf}}$ et on voit à nouveau apparaître $\varepsilon$ et $\mu$}. \nonumber\\
-     &\Leftrightarrow   \partial_{t'} \phi' + 
-     \frac{\varepsilon}{2}
-     \left( (\partial_{x'}\phi')^2+ \frac{1}{\mu}(\partial_{z'}\phi')^2\right) 
-     + \frac{z'}{\varepsilon} 
-     = \frac{\mu}{\varepsilon}(P'-P'_{\text{atm}}) \label{eq_B1_adim}
-\end{align}
-\\
+Pour $\textbf{X} = \mathbb{R}$, l'adimensionnement de (\ref{eq_B1}) s'effectue ainsi:
+\paragraph{Adimensionnement de (\ref{eq_B1}):}
+Après changement de variable, (\ref{eq_B1}) devient
+\begin{equation*}
+     \frac{g t_0 a_{\text{surf}}}{t_0}\partial_{t'} \phi' + \frac{1}{2}\left(\frac{(g t_0 a_{\text{surf}})^2}{L_1^2}(\partial_{x'}\phi')^2+ \frac{(g t_0 a_{\text{surf}})^2}{H_0^2}(\partial_{z'}\phi')^2\right) + g H_0 z' = \frac{1}{\rho_0}\frac{H_0^2\rho_0}{t_0^2}(P'-P'_{\text{atm}}).
+\end{equation*}
+Après factorisation par $ga_\text{surf}$, on trouve
+\begin{equation*}
+    \partial_{t'} \phi' + \frac{1}{2}\left(\frac{g t_0^2 a_{\text{surf}}}{L_1^2}(\partial_{x'}\phi')^2+ \frac{g t_0^2 a_{\text{surf}}}{H_0^2}(\partial_{z'}\phi')^2\right) + \frac{z'}{\varepsilon}  = \frac{H_0^2}{t_0^2ga_\text{surf}}(P'-P'_{\text{atm}}).
+\end{equation*}
+Remarquons alors que
+\begin{equation}
+\begin{split}
+    g t_0^2 a_{\text{surf}} &= g\left(\frac{L_1}{\sqrt{gH_0}}\right)^2a_\text{surf}\\
+    &=  \frac{L_1^2}{H_0}a_\text{surf}\\
+    &= \frac{H_0}{\mu}a_\text{surf} \\
+    &= H_0^2\frac{\varepsilon}{\mu} .
+\end{split}
+\end{equation}
+\begin{equation*}
+    \partial_{t'} \phi' + \frac{1}{2}\left(\frac{H_0^2}{L_1^2}\frac{\varepsilon}{\mu}(\partial_{x'}\phi')^2+\frac{\varepsilon}{\mu}(\partial_{z'}\phi')^2\right) + \frac{z'}{\varepsilon} = \frac{\mu}{\varepsilon}(P'-P'_{\text{atm}}).
+\end{equation*}
+Et comme $\frac{H_0^2}{L_1^2} = \mu$, on obtient finalement
+\begin{equation}
+    \partial_{t'} \phi' + \frac{\varepsilon}{2}\left((\partial_{x'}\phi')^2+\frac{1}{\mu}(\partial_{z'}\phi')^2\right) + \frac{z'}{\varepsilon} = \frac{\mu}{\varepsilon}(P'-P'_{\text{atm}}).\label{eq_B1_adim}
+\end{equation}
 
-L'adimensionnement de (\ref{eq_B2}) s'effectue ainsi:
-\begin{align}
-    \text{(\ref{eq_B2})} &\Leftrightarrow  \frac{(g t_0 a_{\text{surf}})}{L_1^2}\partial_{x' x'}\phi'+ \frac{(g t_0 a_{\text{surf}})}{H_0^2}\partial_{z' z'}\phi'  = 0\nonumber\\
-    &\text{On divise le tout par $ \frac{(g t_0 a_{\text{surf}})^2 }{H_0^2}$ , ce qui fait apparaître $\mu$.}\nonumber\\
-    &\Leftrightarrow \partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 \label{eq_B2_adim}
-\end{align}
+\paragraph{Adimensionnement de (\ref{eq_B2}):} Après changement de variable, (\ref{eq_B2}) devient
 
-L'adimensionnement de (\ref{eq_B3}) s'effectue ainsi
+\begin{equation*}
+    \frac{(g t_0 a_{\text{surf}})}{L_1^2}\partial_{x' x'}\phi'+ \frac{(g t_0 a_{\text{surf}})}{H_0^2}\partial_{z' z'}\phi'  = 0
+\end{equation*}
 
-\begin{align}
-\text{(\ref{eq_B3})} &\Leftrightarrow \text{(\ref{eq_B3_bis})}& ~ \nonumber\\
-&\Leftrightarrow \partial_x b \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = b(x) - H_0\} \nonumber\\
-&\Leftrightarrow \left(\frac{a_{\text{bot}}}{L_1} \partial_{x'} b'\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
-&\Leftrightarrow  \frac{a_{\text{bot}}H_0}{L_1^2} \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\nonumber\\
-&\Leftrightarrow  \beta \mu \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0& \text{dans }\{z' = \beta b'(x') - 1\}\label{eq_B3_adim}
-\end{align}
-
-L'adimensionnement de (\ref{eq_B4}) s'effectue ainsi
-
-\begin{align}
-\text{(\ref{eq_B4})} &\Leftrightarrow \text{(\ref{eq_B4_bis})}& ~ \nonumber\\
-&\Leftrightarrow \partial_t\zeta + \partial_x \zeta \partial_x\phi - \partial_z\phi = 0 & \text{dans }\{z = \zeta(x,t)\} \nonumber\\
-&\Leftrightarrow \frac{a_{\text{surf}}}{t_0}\partial_{t'} \zeta' + \left(\frac{a_{\text{surf}}}{L_1} \partial_{x'} \zeta '\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0& \text{dans }\{z' = \varepsilon \zeta(t',x')\}\nonumber\\
-&\Leftrightarrow \partial_{t'}\zeta' +  \frac{gt_0^2a_{\text{surf}}}{L_1^2} \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{gt_0^2}{H_0}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \nonumber \\
-&\Leftrightarrow \partial_{t'}\zeta' +  \varepsilon \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{1}{\mu}\partial_{z'}\phi' = 0&  \text{dans }\{z' = \varepsilon \zeta(t',x')\} \label{eq_B4_adim}
-\end{align}
+Après factorisation par $ \frac{g t_0 a_{\text{surf}} }{H_0^2}$, on voit apparaître $\mu$:
+\begin{equation}
+    \partial_{z'z'}\phi' + \mu \partial_{x_1' x_1'}\phi'  = 0 \label{eq_B2_adim}
+\end{equation}
 
 
 
+\paragraph{Adimensionnement de (\ref{eq_B3}):} Après changement de variable, dans $\{z' = \beta b'(x') - 1\}$, l'équation (\ref{eq_B3}) qui équivaut à  (\ref{eq_B3_bis}), devient
 
+\begin{equation*}
+    \left(\frac{a_{\text{bot}}}{L_1} \partial_{x'} b'\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0 
+\end{equation*}
+
+Après factorisation par $\frac{g t_0 a_{\text{surf}}}{H_0} $, il vient
+\begin{equation*}
+    \frac{a_{\text{bot}}H_0}{L_1^2}  \partial_{x'} b' \partial_{x'}\phi'  - \partial_{z'}\phi' = 0 .
+\end{equation*}
+
+Autrement dit, dans $\{z' = \beta b'(x') - 1\}$, 
+\begin{equation}
+    \beta \mu \partial_{x'} b'  \partial_{x'}\phi'   - \partial_{z'}\phi' = 0 \label{eq_B3_adim}
+\end{equation}
+
+\paragraph{Adimensionnement de (\ref{eq_B4}):} Après changement de variable, dans $\{z = \zeta(x,t)\}$, l'équation (\ref{eq_B4}), qui équivaut à  (\ref{eq_B4_bis}), devient
+\begin{equation*}
+    \frac{a_{\text{surf}}}{t_0}\partial_{t'} \zeta' + \left(\frac{a_{\text{surf}}}{L_1} \partial_{x'} \zeta '\right)\left(\frac{gt_0a_{\text{surf}}}{L_1}\partial_{x'}\phi'\right)  - \frac{gt_0a_{\text{surf}}}{H_0}\partial_{z'}\phi' = 0 .
+\end{equation*}
+Après factorisation par $ \frac{a_{\text{surf}} }{t_0}$, on trouve
+\begin{equation*}
+     \partial_{t'}\zeta' +  \frac{gt_0^2a_{\text{surf}}}{L_1^2} \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{gt_0^2}{H_0}\partial_{z'}\phi' = 0
+\end{equation*}
+Ce qui donne donc 
+\begin{equation}
+    \partial_{t'}\zeta' +  \varepsilon \partial_{x'} \zeta ' \partial_{x'}\phi'  - \frac{1}{\mu}\partial_{z'}\phi' = 0\label{eq_B4_adim}
+\end{equation}
 
 
 Par la suite, lorsqu'on travaillera sur les équations adimensionnées, on se permettra d'omettre les apostrophes sur ces variables.
@@ -445,25 +511,25 @@ Plus précisément, on s'intéressera au cas d'une vague unidirectionnelle en su
 Dans cette approche, proposée par \cite{MT}, on parvient à une simplification des équations d'Euler en remarquant pour commencer la proposition suivante
 \begin{prop}
  
-    Si $\phi$ est de classe $2n+2$, alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$, de classe $2n+2$, telle que
+    Si $\phi$ est de classe $2n+2$ et vérifie (\ref{eq_k2}) et (\ref{eq_k3}), alors il existe une fonction $f:\mathbb{R}^+\times\textbf{X}\rightarrow \mathbb{R}$, de classe $2n+2$, telle que
     \begin{equation}
         \phi (t,x,z) = \sum_{j = 0}^{n} \mu^j\frac{(-1)^j}{(2j)!} (z+1)^{2j}\frac{\partial^{2j}f}{\partial x^{2j}}(x,t)
         + (-\mu)^{n+1}\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial x^{2n+2}}(t,x,s)ds
     \end{equation}
 \end{prop}
 \begin{proof}
-Le développement de Taylor de $\phi$ en $z = -1$, à l'ordre $2n+2$, (avec reste intégrale).
+Le développement de Taylor de $\phi$ en $z = -1$, à l'ordre $2n+2$, (avec reste intégrale) est
 \begin{equation*}
 \begin{split}
     \phi(t,x,z) = &\phi(t,x,-1) + (z+1)\frac{\partial \phi}{\partial z}(t,x,-1)\\
     &+ \frac{(z+1)^2}{2}\frac{\partial^2 \phi}{\partial z^2}(t,x,-1) + \frac{(z+1)^3}{3!}\frac{\partial^3 \phi}{\partial z^3}(t,x,-1)\\
     & \cdots\\
     &+ \frac{(z+1)^{2n}}{(2n)!}\frac{\partial^{2n} \phi}{\partial z^{2n}}(t,x,-1) + \frac{(z+1)^{2n+1}}{(2n+1)!}\frac{\partial^{2n+1} \phi}{\partial z^{2n+1}}(t,x,-1)\\
-    &+\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial z^{2n+2}}(t,x,s)ds
+    &+\int_{-1}^z\frac{(z-s)^{2n+2}}{(2n+2)!}\frac{\partial^{2n+2} \phi}{\partial z^{2n+2}}(t,x,s)ds.
 \end{split}
 \end{equation*}
 
-L'équation (\ref{eq_k2}) nous donne, après une récurrence immédiate, pour $z>-1$.
+Par récurrence, l'équation (\ref{eq_k2}) nous donne, pour $z>-1$
 \begin{equation*}
     \frac{\partial^{2j} \phi}{\partial z^{2j}}(t,x,z) = (-\mu)^{n}\frac{\partial^{2j} \phi}{\partial x^{2j}}(t,x,z)
 \end{equation*}
@@ -869,6 +935,7 @@ Ainsi, en intégrant (\ref{tobeintegrate}) par rapport à $z$ et en divisant par
     \partial_t\overline{U}_1+\frac{\varepsilon}{2}\partial_x{U_1^2} + \partial_x\zeta = \mathcal{O}(\mu)
 \end{equation}
 \end{proof}
+\newpage
 \section{Étude numérique de ces quelques équations}
 \subsection{ L'équation de Airy}
 L'équation (\ref{Airy}) est une équation linéaire simple à résoudre. Il est toutefois très intéressant d'étudier les différents schémas numériques qui permettent de modéliser cette équation d'évolution. Pour cause, connaître l'action de ces schémas sur cette équation nous permettra de connaître, avec précision, l'effet de nos futurs schémas sur le terme de dispersion $\partial_{xxx}u$ de l'équation de (\ref{KdV}).
@@ -877,22 +944,23 @@ L'équation (\ref{Airy}) est une équation linéaire simple à résoudre. Il est
 En connaissant la condition initiale $u(\cdot,0) = u_0$, on connaît, analytiquement, la solution $u$ en tout temps. En effet, si $\hat{u}$ désigne la transformée de Fourier de $u$, l'équation (\ref{Airy}) devient
 
 \begin{equation*}
-    \partial_t\hat{u}(\xi, t) - i\xi^3\hat{u}(\xi, t) = 0
+    \partial_t\hat{u}(\xi, t) - i\xi^3\hat{u}(\xi, t) = 0.
 \end{equation*}
 
-ce qui nous donne alors
+Ceci nous donne alors
 \begin{equation*}
-    \hat{u}(\xi, t) = e^{it\xi^3}\hat{u_0}(\xi)
-\end{equation*}.
+    \hat{u}(\xi, t) = e^{it\xi^3}\hat{u_0}(\xi).
+\end{equation*}
 
-\paragraph{Première conséquence :} Nous avons la conservation de la norme $L^2$ de $u$.
+Par transformée de Fourier inverse, on obtient alors une expression pour $u$ en tout temps. De plus, deux conséquences se déduisent de cette expression.
+\paragraph{Première conséquence :} Il y a la conservation de la norme $L^2$ de $u$,
 \begin{equation}
-    \|u\|_{L^2}(t) = \|\hat{u}\|_{L^2}(t) =\|e^{it\xi^3}\hat{u_0}\|_{L^2} =  \|\hat{u_0}\|_{L^2} =  \|u_0\|_{L^2} 
+    \|u\|_{L^2}(t) = \|\hat{u}\|_{L^2}(t) =\|e^{it\xi^3}\hat{u_0}\|_{L^2} =  \|\hat{u_0}\|_{L^2} =  \|u_0\|_{L^2} .
 \end{equation}
 
 Nous nous intéresserons alors à l'utilisation de schémas qui conservent cette norme de sorte qu'il n'y ait ni dissipation d'énergie, ni création d'instabilité.
 
-\paragraph{Deuxième conséquence :} Les harmoniques de $u$ son conservées et se déplacent à vitesse $v_\xi$ constante en temps dépendant de la fréquence $\xi$. La translation d'une harmonique se traduit par le déphasage du coefficients de Fourier associé. Plus précisément, 
+\paragraph{Deuxième conséquence :} Les harmoniques de $u$ son conservées et se déplacent à vitesse $v_\xi$ constante en temps dépendant de la fréquence $\xi$. La translation d'une harmonique se traduit par le déphasage du coefficients de Fourier en espace associé. Plus précisément, 
 
 \begin{equation}
 \begin{split}
@@ -905,7 +973,7 @@ Nous nous intéresserons alors à l'utilisation de schémas qui conservent cette
 Nous essaierons alors au mieux de nous concentrer sur l'utilisation de schémas apportant une vitesse des harmoniques la plus fidèle possible.
 
 \subsubsection{ Discrétisation en temps: }
-Commençons par discrétiser la variable temporelle uniformément. Posons $t^n = n\Delta_t$, et intéressons à l'approximation $\texttt{U}^n \approx u(\cdot,t^n)$ générée par le $\theta-$schéma si dessous.
+Commençons par discrétiser la variable temporelle uniformément. Posons $t^n = n\Delta_t$, et intéressons nous à l'approximation $\texttt{U}^n \approx u(\cdot,t^n)$ générée par le $\theta-$schéma si dessous.
 \begin{equation}
 \frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + \partial_{xxx}(\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}) = 0 \label{num_theta_scheme_Airy}
 \end{equation}
@@ -947,7 +1015,7 @@ Le développement limité de Arctan en 0 nous donne alors
     \texttt{v}_\xi^{\Delta_t} = \xi^2 - \frac{1}{3}\left((1-\theta)^3+\theta^3\right)\Delta_t^2\xi^8 + \mathcal{O}((\Delta_t)^4) 
 \end{equation}
 
-On s'assurera pour la suite de vérifier $\Delta_t^2\xi^8 << 1$. Autrement dit, on imposera $$\Delta_t << \left(\frac{1}{\xi_\text{max}}\right)^4$$.
+Pour la suite, on supposera que l'ensemble $Supp(\hat{u}):=\{\xi > 0 ~|~ \|\hat{u}\|>0\}$ est borné (majoré par une constante $\xi_\text{max}$). On s'assurera alors de vérifier $\Delta_t^2\xi^8 << 1$ dans cet ensemble. Autrement dit, on imposera $$\Delta_t << \left(\frac{1}{\xi_\text{max}}\right)^4$$.
 \paragraph{Remarque :} Le $\theta$ qui minimise le second terme de ce développement limité est $\theta = \frac{1}{2}$. Le schéma de Crank Nicholson est donc le meilleur ici aussi.
 
 \subsubsection{Discrétisation temps et en espace :}
@@ -959,25 +1027,24 @@ où $\texttt{U}^{n+1}$ désigne cette fois la suite $(\texttt{U}^n_j)_{j\in\math
 
 \paragraph{Étude de la conservation de la norme $L^2$ de notre schéma}\,\\
 
-Désignons par $<\cdot,\cdot>$ le produit scalaire associé à l'espace de Hilbert $l^2(\mathbb{Z})$ définit par $$<\texttt{u},\texttt{v} > = \sum\limits_{i\in\mathbb{Z}}\texttt{u}_i\texttt{v}_i\Delta_x$$ et observons l'évolution de $\texttt{U}^n$ pour la norme associée. Pour cela on effectue le produit scalaire des termes de l'équation (\ref{num_scheme_Airy}) par $ \texttt{V}^n_\theta = (\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n})$. Ceci donne
+Désignons par $\langle\cdot,\cdot\rangle $ le produit scalaire associé à l'espace de Hilbert $l^2(\mathbb{Z})$ définit par $$\langle\texttt{u},\texttt{v} \rangle  = \sum\limits_{i\in\mathbb{Z}}\texttt{u}_i\texttt{v}_i\Delta_x$$ et observons l'évolution de $\texttt{U}^n$ pour la norme associée. Pour cela on effectue le produit scalaire des termes de l'équation (\ref{num_scheme_Airy}) par $ \texttt{V}^n_\theta = (\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n})$. Ceci donne
 
 \begin{equation}
-    <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{V}^n_\theta >+ \Delta_t < B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = 0 \label{num_scheme_L2_stability_eq_1}
+    \langle \texttt{U}^{n+1}- \texttt{U}^n, \texttt{V}^n_\theta \rangle + \Delta_t \langle  B\texttt{V}^n_\theta , \texttt{V}^n_\theta  \rangle  = 0 \label{num_scheme_L2_stability_eq_1}
 \end{equation}
 Comme $B$ est antisymétrique, il vient 
-$$< B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = < \texttt{V}^n_\theta , B^T\texttt{V}^n_\theta  > = -< B\texttt{V}^n_\theta , \texttt{V}^n_\theta  > = 0$$
+$$\langle  B\texttt{V}^n_\theta , \texttt{V}^n_\theta  \rangle  = \langle  \texttt{V}^n_\theta , B^T\texttt{V}^n_\theta  \rangle  = -\langle  B\texttt{V}^n_\theta , \texttt{V}^n_\theta  \rangle  = 0$$
 Et donc (\ref{num_scheme_L2_stability_eq_1}) devient
 
-\begin{equation}
+\begin{equation}\label{develop_theta_square}
 \begin{split}
-    0  &=   <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n} + \theta(\texttt{U}^{n+1}  - \texttt{U}^{n})> 
-    \\ &=   <\texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n}>  + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n})\|^2
-    \\ &=   <\texttt{U}^{n+1}, \texttt{U}^{n}>-  \|\texttt{U}^{n}\|^2 + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n}\|^2
+    0  &=   \langle \texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n} + \theta(\texttt{U}^{n+1}  - \texttt{U}^{n})\rangle  
+    \\ &=   \langle \texttt{U}^{n+1}- \texttt{U}^n, \texttt{U}^{n}\rangle   + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n})\|^2
+    \\ &=   \langle \texttt{U}^{n+1}, \texttt{U}^{n}\rangle -  \|\texttt{U}^{n}\|^2 + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n}\|^2
     \\ &=   \frac{1}{2}\left(\|\texttt{U}^{n+1}\|^2+ \|\texttt{U}^n\|^2 - \|\texttt{U}^{n+1}- \texttt{U}^n\|^2\right)-  \|\texttt{U}^{n}\|^2 + \theta\|\texttt{U}^{n+1}  - \texttt{U}^{n}\|^2
     \\ &=   \frac{1}{2}\left(\|\texttt{U}^{n+1}\|^2 - \|\texttt{U}^n\|^2 - (1 - 2\theta) \|\texttt{U}^{n+1}-  \texttt{U}^{n}\|^2 \right)
 \end{split}
 \end{equation}
-
 Autrement dit, 
 
 \begin{equation}
@@ -985,11 +1052,8 @@ Autrement dit,
 \end{equation}
 
 On en déduit que:\\
-
 Si $\theta = \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 = \|\texttt{U}^n\|^2$ et donc la norme $L^2$ numérique est conservée.\\
-
 Si $\theta > \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 < \|\texttt{U}^n\|^2$ et donc la norme $L^2$ décroît. (il y a dissipation d'énergie)\\
-
 Si $\theta < \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 > \|\texttt{U}^n\|^2$ et donc la norme $L^2$ croît. (le schéma est instable)\\
 
 \paragraph{Choix d'un schéma pour la dérivée troisième}\,\\
@@ -997,34 +1061,311 @@ Si $\theta < \frac{1}{2}$, $\|\texttt{U}^{n+1}\|^2 > \|\texttt{U}^n\|^2$ et donc
 Pour la suite nous poserons pour $B$ l'opérateur suivant
 \begin{align*}
         B : l^2(\mathbb{Z}) &\longrightarrow l^2(\mathbb{Z})\\
-        (\texttt{v}_i)_{i\in\mathbb{Z}} &\mapsto \left(\frac{\texttt{v}_{i-2} - 2\texttt{v}_{i-1} + 2\texttt{v}_{i+1}-\texttt{v}_{i+2} }{2(\Delta_x)^3}\right)_{i\in\mathbb{Z}}
+        (\texttt{v}_i)_{i\in\mathbb{Z}} &\mapsto \left(\frac{\texttt{v}_{i-2} - 2\texttt{v}_{i-1} + 2\texttt{v}_{i+1}-\texttt{v}_{i+2} }{2(\Delta_x)^3}\right)_{i\in\mathbb{Z}}.
 \end{align*}
-
 Cet opérateur est antisymétrique. Le schéma associé est consistant à l'ordre 2 à l'opérateur $ \partial_{xxx}$ .
 
 \subsubsection{Implémentation numérique}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = 0.5]{graphs/v_xi en fonction de dt.pdf}
+    \includegraphics[scale = 0.8]{graphs/v_xi en fonction de dt.pdf}
     \caption{Vitesse des harmoniques en fonction de la fréquence pour $\Delta_t = 3\times10^{-4}$}
     \label{fig:enter-label}
 \end{figure}
 
 \subsection{L'équation de KdV}
-L'équation (\ref{KdV}) peut s'écrire
+Dans cette partie nous écrirons plutôt (\ref{KdV}) sous la forme
+
 
 \begin{equation*}
     \partial_tu + \partial_{xxx}u +\frac{1}{2}\partial_x(u^2)  = 0
 \end{equation*}
+
+\subsubsection{Quelques lois de conservation des équations de KdV}
+
+L'équation de \ref{KdV} présente de nombreux opérateurs invariants. Dans cette sous-partie, nous mettrons en lumière 3 principaux invariants : la masse, la norme et l'énergie que vous retrouverez par exemple dans \textsc{Johnson}\cite{Johnson}. Cependant, Miura à démontré  en 1974 qu'il existe en réalité une infinité d'invariants pour cette équation.
+
+\begin{prop}
+    Soit $u$ une solution de (\ref{KdV}). Supposons que $u$ et toutes ses dérivées en espace tendent vers 0 lorsque $|x|$ tend vers l'infini (conformément à l'hypothèse ($\textbf{H}_9$) ). Supposons aussi que $u$ est $L_1$. Alors les égalités suivantes sont vérifiées.
+    \begin{equation}
+        \partial_t\left(\int_{-\infty}^{+\infty}u\right) = 0
+    \end{equation}
+    
+    \begin{equation}
+        \partial_t\left(\int_{-\infty}^{+\infty}u^2\right) = 0
+    \end{equation}
+
+    \begin{equation}
+        \partial_t\left(\frac{1}{2}\int_{-\infty}^{+\infty}u\partial_{xx}u + \int_{-\infty}^{+\infty}\frac{u^3}{6}\right) = 0
+    \end{equation}
+\end{prop}
+\begin{proof}
+    Commençons par la moyenne de $u$:
+    \begin{equation*}
+        \begin{split}
+            \partial_t\left(\int_{-\infty}^{+\infty}u\right) &= \int_{-\infty}^{+\infty}\partial_tu\\
+            &= \int_{-\infty}^{+\infty}\left(-\partial_{xxx}u -\frac{1}{2}\partial_x(u^2)\right)\\
+            &= -\int_{-\infty}^{+\infty}\partial_{xxx}u -\frac{1}{2}\int_{-\infty}^{+\infty}\partial_x(u^2)\\
+            &= -\left[\partial_{xx}u\right]_{-\infty}^{+\infty} -\frac{1}{2}\left[u^2\right]_{-\infty}^{+\infty}\\
+        \end{split}
+    \end{equation*}
+    Comme $\partial_xu$ et $u^2$ sont nuls en l'infini, on a donc l'égalité voulue.
+
+    Regardons ensuite la norme $L^2$ de $u$:
+    \begin{equation*}
+        \begin{split}
+            \partial_t\left(\int_{-\infty}^{+\infty}u^2\right) &= \int_{-\infty}^{+\infty}\partial_t(u)^2\\
+            &= \int_{-\infty}^{+\infty}2u\partial_t(u)\\
+            &= 2\int_{-\infty}^{+\infty}u\times\left(-\partial_{xxx}u -\partial_x(u^2)\right)\\
+            &= -2\int_{-\infty}^{+\infty}u\partial_{xxx}u -2\int_{-\infty}^{+\infty}u\partial_x(u^2)\\
+        \end{split}
+    \end{equation*}
+    Après une intégration par partie, il vient alors
+    \begin{equation*}
+        \begin{split}
+            \partial_t\left(\int_{-\infty}^{+\infty}u^2\right)
+            &= -2\left[u\partial_{xx}u\right]_{-\infty}^{+\infty} + 2\int_{-\infty}^{+\infty}\partial_xu\partial_{xx}u -2\left[u^3\right]_{-\infty}^{+\infty} +2\int_{-\infty}^{+\infty}u^2\partial_xu\\
+            &= -2\left[u\partial_{xx}u\right]_{-\infty}^{+\infty} + 2\left[\frac{(\partial_{x}u)^2}{2}\right]_{-\infty}^{+\infty} -2\left[u^3\right]_{-\infty}^{+\infty} + 2\left[\frac{u^3}{3}\right]_{-\infty}^{+\infty}\\
+        \end{split}
+    \end{equation*}
+    Comme toutes ces fonctions sont nulles en l'infini, tous les termes sont nuls et il découle donc l'égalité voulue.
+
+    Pour finir regardons l'énergie de l'équation de (\ref{KdV}).Pour cela, multiplions $u$ par $\partial_{xx}u$. Remarquons à l'aide de deux intégrations par parties successives que
+    \begin{equation*}
+        \begin{split}
+            \partial_t\left(\int_{-\infty}^{+\infty}u\partial_{xx}u\right) &= -\partial_t\int_{-\infty}^{+\infty}(\partial_xu)^2\\
+            &= -\int_{-\infty}^{+\infty}2\partial_x(\partial_tu)\partial_xu\\
+            &= 2\int_{-\infty}^{+\infty}\partial_tu\partial_{xx}u\\
+        \end{split}
+    \end{equation*}
+    En remplaçant $\partial_tu$ conformément à l'équation de  KdV, il s'en suit
+    \begin{equation*}
+        \begin{split}
+            \frac{1}{2}\partial_t\left(\int_{-\infty}^{+\infty}u\partial_{xx}u\right) &= -\int_{-\infty}^{+\infty}\left(\partial_{xxx}u + \frac{1}{2}\partial_{x}(u^2)\right)\partial_{xx}u\\
+            &= -\int_{-\infty}^{+\infty}\partial_{xxx}u\partial_{xx}u -\frac{1}{2}\int_{-\infty}^{+\infty}\partial_{x}(u^2)\partial_{xx}u\\
+            &= -\int_{-\infty}^{+\infty}\partial_x((\partial_{xx}u)^2) + \frac{1}{2}\int_{-\infty}^{+\infty}u^2\partial_{xxx}u\\
+            &= \left[-(\partial_{xx}u)^2\right]_{-\infty}^{+\infty} + \frac{1}{2}\int_{-\infty}^{+\infty}u^2\partial_{xxx}u\\
+        \end{split}
+    \end{equation*}
+    Encore une fois, par hypothèse, la fonction $\partial_{xx}u$ est nulle en l'infini et donc le premier terme de cette dernière ligne est nul. Quant au second terme, en remplaçant $\partial_{xxx}u$ conformément à l'équation de KdV, il vient
+    \begin{equation*}
+        \begin{split}
+            \frac{1}{2}\partial_t\left(\int_{-\infty}^{+\infty}u\partial_{xx}u\right) &=\frac{1}{2}\int_{-\infty}^{+\infty}u^2\left( -\partial_tu -\frac{1}{2}\partial_x(u^2)\right)\\
+            &= - \frac{1}{2}\int_{-\infty}^{+\infty}u^2 \partial_tu -\frac{1}{4}\int_{-\infty}^{+\infty}u^2\partial_x(u^2)\\
+            &= - \frac{1}{2}\int_{-\infty}^{+\infty}\frac{1}{3}\partial_t(u^3) - \frac{1}{8}\int_{-\infty}^{+\infty}\partial_x(u^4)\\
+            &= - \frac{1}{6}\partial_t\int_{-\infty}^{+\infty}u^3 - \frac{1}{8}\left[u^4\right]_{-\infty}^{+\infty}\\
+            &= - \frac{1}{6}\partial_t\int_{-\infty}^{+\infty}u^3 + 0 ,\\
+        \end{split}
+    \end{equation*}
+    ce qui nous donne l'égalité voulue.
+\end{proof}
+\paragraph{Remarque: } Dans notre cas précis, nous étudieront des solutions sous la forme de vagues localisées telles que des solitons, on supposera alors une convergence très rapide vers 0 de la hauteur du fluide à mesure que l'on s'éloigne de cette vague. Dans ce contexte, il est alors sensé de supposer $u$ intégrable.
 
 \subsubsection{ Discrétisation en temps: }
 
 De manière analogue à (\ref{num_theta_scheme_Airy}), posons $t^n = n\Delta_t$, et intéressons à l'approximation $\texttt{U}^n \approx u(\cdot,t^n)$ générée par le $\theta-$schéma si dessous.
 
 \begin{equation}
-\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + \partial_{xxx}\left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right) + \frac{1}{2}\partial_{x}\left( \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right)^2 \right) = 0 \label{num_theta_scheme_kdv}
+\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + \partial_{xxx}\left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right) + \frac{1}{2}\partial_{x}\left( \left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right)^2 \right) = 0 \label{num_theta_scheme_kdv}
 \end{equation}
+On supposera que les fonctions $\texttt{U}^n$ et toutes leurs dérivées sont nulles à l'infini ( conformément à l'hypothèse ($\textbf{H}_9$) ).
+\paragraph{Étude de l'évolution de la moyenne de $\texttt{U}^n$}\,\\
+\begin{prop}
+    Soit $(\texttt{U}^n)_{n  \in \mathbb{N}}$ une suite de fonctions au moins trois fois dérivables satisfaisant (\ref{num_scheme_kdv}) pour un certain $\theta\in[0,1]$ . Supposons que, pour tout entier $n$, la fonction $\texttt{U}^n$ et toutes ses dérivées en espace tendent vers 0 lorsque $|x|$ tend vers l'infini (conformément à l'hypothèse ($\textbf{H}_9$)). Alors pour tout entier $n$, $\int_{-\infty}^{+\infty}\texttt{U}^{n+1} = \int_{-\infty}^{+\infty}\texttt{U}^n$ .
+\end{prop}
+\begin{proof}
+    Notons par $\overline{\texttt{U}}^n$ la moyenne $\int_{-\infty}^{+\infty}\texttt{U}^n$. En intégrant l'équation (\ref{num_theta_scheme_kdv}) on trouve la relation suivante:
+\begin{equation*}
+\begin{split}
+    \frac{\overline{\texttt{U}}^{n+1}-\overline{\texttt{U}}^n}{\Delta_t} 
+    &= -\int_{-\infty}^{+\infty} \partial_{xxx}\left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right) -\frac{1}{2}\int_{-\infty}^{+\infty} \partial_{x}\left( \left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right)^2 \right) \\
+    &= - \left[ \partial_{xx}\left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right)\right]_{-\infty}^{+\infty} -\frac{1}{2}\left[\left(\frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}\right)^2 \right]_{-\infty}^{+\infty} \\
+    & = 0
+\end{split}
+\end{equation*}
+Ainsi, pour tout entier naturel $n$, on a $\overline{\texttt{U}}^{n+1} - \overline{\texttt{U}}^{n} = 0$.
+\end{proof}
+
+
+\paragraph{Étude de l'évolution la norme $\textbf{L}^2$ de $\texttt{U}^n$}\,\\
+On tire ici les même conclusion que pour l'équation de Airy, c'est à dire:
+\begin{prop}
+    Soit $(\texttt{U}^n)_{n  \in \mathbb{N}}$ une suite de fonctions au moins trois fois dérivables satisfaisant (\ref{num_scheme_kdv}) pour un certain $\theta\in[0,1]$ . Supposons que, pour tout entier $n$, la fonction $\texttt{U}^n$ et toutes ses dérivées en espace tendent vers 0 lorsque $|x|$ tend vers l'infini (conformément à l'hypothèse ($\textbf{H}_9$)). Alors pour tout entier $n \geq 0$:\\
+    si $\theta = \frac{1}{2}$, $\int (\texttt{U}^{n+1})^2 = \int (\texttt{U}^{n})^2$ donc la norme $L^2$ est conservée.\\
+    si $\theta > \frac{1}{2}$, $\int (\texttt{U}^{n+1})^2 \leq \int (\texttt{U}^{n})^2$ et donc la norme $L^2$ décroît. (il y a dissipation d'énergie)\\
+    si $\theta < \frac{1}{2}$, $\int (\texttt{U}^{n+1})^2 \geq \int (\texttt{U}^{n})^2$ et donc la norme $L^2$ croît. (le schéma est instable)\\
+\end{prop}
+\begin{proof}
+    Posons $\texttt{V}_\theta^n = \frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}$. En multipliant (\ref{num_theta_scheme_kdv}) par $\texttt{V}^n_\theta$ puis en intégrant, la relation suivante s'obtient:
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t}\texttt{V}_\theta^n
+    &= -\int_{-\infty}^{+\infty} \texttt{V}_\theta^n\partial_{xxx} \texttt{V}_\theta^n  -\frac{1}{2}\int_{-\infty}^{+\infty} \texttt{V}_\theta^n\partial_{x}\left( \left(\texttt{V}_\theta^n\right)^2 \right) \\
+    (i.p.p)~~&= \int_{-\infty}^{+\infty} \partial_{x}\texttt{V}_\theta^n\partial_{xx} \texttt{V}_\theta^n  + \frac{1}{2}\int_{-\infty}^{+\infty}  \left(\texttt{V}_\theta^n\right)^2\partial_{x} \texttt{V}^n  \\
+    &= \frac{1}{2}\left[\left(\partial_{x}\texttt{V}_\theta^n\right)^2\right]_{-\infty}^{+\infty} -\frac{1}{6} \left[\left(\texttt{V}_\theta^n\right)^3 \right]_{-\infty}^{+\infty} \\
+    & = 0 .
+\end{split}
+\end{equation*}
+Remarquons de plus, par un développement analogue à (\ref{develop_theta_square}), que 
+$$(\texttt{U}^{n+1}-\texttt{U}^n)\texttt{V}_\theta^n = \frac{1}{2}\left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2 + (1-2\theta)(\texttt{U}^{n+1}-\texttt{U}^{n})^2 \right).$$ 
+On obtient alors la relation
+\begin{equation}
+    \int_{-\infty}^{+\infty}(\texttt{U}^{n+1})^2 - \int_{-\infty}^{+\infty}(\texttt{U}^{n})^2 = (1-2\theta) \int_{-\infty}^{+\infty}(\texttt{U}^{n+1}- \texttt{U}^{n})^2 .
+\end{equation}
+La croissance de la norme $L^2$ dépend donc du signe de $(1-2\theta)$ ce qui nous donne le résultat.
+\end{proof}
+
+
+
+
+
+\paragraph{Évolution de l'énergie globale du système}\,\\
+Posons $\mathcal{J}$ la fonctionnelle quadratique suivante 
+\begin{align*}
+        \mathcal{J} : \mathcal{C}^3(\mathbb{R}) &\longrightarrow \mathbb{R}\\
+        u &\mapsto \frac{1}{2}\int_{-\infty}^{+\infty} u\partial_{xx}u  +  \int_{-\infty}^{+\infty}\frac{(u)^3}{6}
+\end{align*}
+\begin{prop}
+Soit $(\texttt{U}^n)_{n  \in \mathbb{N}}$ une suite de fonctions au moins trois fois dérivables satisfaisant (\ref{num_scheme_kdv}) pour un certain $\theta\in[0,1]$ . Supposons que, pour tout entier $n$, la fonction $\texttt{U}^n$ et toutes ses dérivées en espace tendent vers 0 lorsque $|x|$ tend vers l'infini (conformément à l'hypothèse ($\textbf{H}_9$)). Alors pour tout entier $n \geq 0$,
+    \begin{equation*}
+\begin{aligned}
+    \frac{\mathcal{J}(\texttt{U}^{n+1})- \mathcal{J}(\texttt{U}^{n})}{\Delta_t} &= - \theta (\Delta_t)^2 \left(\frac{1}{12}\int_{-\infty}^{+\infty}\left(\frac{\texttt{U}^{n+1} - \texttt{U}^n}{\Delta_t}\right)^3\right)\\
+    &+ (1-2\theta)\left(\frac{1}{6}\int_{-\infty}^{+\infty} \frac{(\texttt{U}^{n+1})^3-(\texttt{U}^n)^3}{\Delta_t}  \right) \\
+    &- (1-2\theta)\left(\frac{1}{4}\int_{-\infty}^{+\infty}\texttt{U}^n \left(\frac{(\texttt{U}^{n+1})^2-(\texttt{U}^n)^2}{\Delta_t}\right) \right) \\
+    &- (1-2\theta)(\Delta_t)\left(\frac{1}{2}\int_{-\infty}^{+\infty}\left(\frac{\partial_{x}\texttt{U}^{n+1}-\partial_{x}\texttt{U}^n}{\Delta_t}\right)^2 \right).
+\end{aligned}
+\end{equation*}
+\end{prop}
+\begin{proof}
+    Posons à nouveau $\texttt{V}_\theta^n = \frac{\theta\texttt{U}^{n+1} + (1-\theta)\texttt{U}^{n}}{2}$. En multipliant (\ref{num_theta_scheme_kdv}) par $\partial_{xx}\texttt{V}^n_\theta$ puis en intégrant, il vient que
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t}\partial_{xx}\texttt{V}_\theta^n
+    &= -\int_{-\infty}^{+\infty} \partial_{xxx} \texttt{V}_\theta^n\partial_{xx}\texttt{V}_\theta^n  -\frac{1}{2}\int_{-\infty}^{+\infty} \partial_{x}\left( \left(\texttt{V}_\theta^n\right)^2 \right)\partial_{xx}\texttt{V}_\theta^n. \\
+\end{split}
+\end{equation*}
+Or,
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\partial_{xxx}\texttt{V}_\theta^n  \partial_{xx}\texttt{V}_\theta^n
+    &= \frac{1}{2}\int_{-\infty}^{+\infty} \partial_{x}\left((\partial_{xx}\texttt{V}_\theta^n)^2\right) \\
+    &= \frac{1}{2}\left[  (\partial_{xx}\texttt{V}_\theta^n)^2\right]_{-\infty}^{+\infty} \\
+    &= 0.
+\end{split}
+\end{equation*}
+De plus, par une intégration pas parties, il vient que
+\begin{equation*}
+\begin{split}
+   \int_{-\infty}^{+\infty} \partial_{x}\left( \left(\texttt{V}_\theta^n\right)^2 \right)\partial_{xx}\texttt{V}_\theta^n
+    &=-\int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 \partial_{xxx}\texttt{V}_\theta^n. \\
+\end{split}
+\end{equation*}
+On parvient donc à la relation
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t}\partial_{xx}\texttt{V}_\theta^n
+    &= \frac{1}{2}\int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 \partial_{xxx}\texttt{V}_\theta^n .\\
+\end{split}
+\end{equation*}
+En remplaçant $\partial_{xxx}\texttt{V}_\theta^n$ conformément à la relation (\ref{num_scheme_kdv}), on obtient alors
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t}\partial_{xx}\texttt{V}_\theta^n
+    &= \frac{1}{2}\int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 \times \left( -\frac{\texttt{U}^{n+1} - \texttt{U}^{n} }{\Delta_t} - \frac{1}{2}\partial_x((\texttt{V}_\theta^n)^2)\right) \\
+    &= -\frac{1}{2\Delta_t}\int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 (\texttt{U}^{n+1} - \texttt{U}^{n}) - \frac{1}{4}\int_{-\infty}^{+\infty}\left(\texttt{V}_\theta^n\right)^2\partial_x(\left(\texttt{V}_\theta^n\right)^2) .
+\end{split}
+\end{equation*}
+Or, 
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}\left(\texttt{V}_\theta^n\right)^2\partial_x(\left(\texttt{V}_\theta^n\right)^2)
+    &= \frac{1}{2}\int_{-\infty}^{+\infty} \partial_x(\left(\texttt{V}_\theta^n\right)^4)\\
+    &= \frac{1}{2}\left[\left(\texttt{V}_\theta^n\right)^4\right]_{-\infty}^{+\infty}\\
+    &= 0
+\end{split}
+\end{equation*}
+On obtient alors
+\begin{equation}\label{energy_theta_dem1}
+\begin{split}
+    \int_{-\infty}^{+\infty}(\texttt{U}^{n+1}-\texttt{U}^n)\partial_{xx}\texttt{V}_\theta^n
+    &= -\frac{1}{2}\int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 (\texttt{U}^{n+1} - \texttt{U}^{n}) .
+\end{split}
+\end{equation}
+
+Observons chacun de ces deux termes séparément. Tout d'abord une intégration par parties permet d'écrire
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}(\texttt{U}^{n+1}-\texttt{U}^n)\partial_{xx}\texttt{V}_\theta^n
+    &= -\int_{-\infty}^{+\infty}\partial_{x}(\texttt{U}^{n+1}-\texttt{U}^n)\partial_{x}\texttt{V}_\theta^n\\
+    &= -\int_{-\infty}^{+\infty}(\partial_{x}\texttt{U}^{n+1}-\partial_{x}\texttt{U}^n)(\theta\partial_{x}\texttt{U}^{n+1}+(1-\theta)\partial_{x}\texttt{U}^n)\\
+\end{split}
+\end{equation*}
+Par un développement analogue à (\ref{develop_theta_square}), on obtient alors
+\begin{equation*}
+\begin{split}
+    \int_{-\infty}^{+\infty}(\texttt{U}^{n+1}-\texttt{U}^n)\partial_{xx}\texttt{V}_\theta^n
+    &= -\frac{1}{2}\int_{-\infty}^{+\infty} (\partial_{x}\texttt{U}^{n+1})^2-(\partial_{x}\texttt{U}^n)^2 + (1-2\theta)(\partial_{x}\texttt{U}^{n+1}-\partial_{x}\texttt{U}^n)^2\\
+\end{split}
+\end{equation*}
+Que l'on peut aussi écrire, après une brève intégration par parties, 
+\begin{equation}\label{energy_theta_dem2}
+\begin{split}
+    \int_{-\infty}^{+\infty}(\texttt{U}^{n+1}-\texttt{U}^n)\partial_{xx}\texttt{V}_\theta^n
+    &= \frac{1}{2}\int_{-\infty}^{+\infty} \texttt{U}^{n+1}\partial_{xx}\texttt{U}^{n+1} - \frac{1}{2}\int_{-\infty}^{+\infty}\texttt{U}^{n}\partial_{xx}\texttt{U}^{n} + \frac{(1-2\theta)}{2}\int_{-\infty}^{+\infty}(\partial_{x}\texttt{U}^{n+1}-\partial_{x}\texttt{U}^n)^2\\
+\end{split}
+\end{equation}
+
+Quant au second terme, cette même analogie permet d'avoir 
+\begin{equation*}
+\begin{split}
+  \frac{1}{2} \int_{-\infty}^{+\infty} \left(\texttt{V}_\theta^n\right)^2 (\texttt{U}^{n+1} - \texttt{U}^{n})
+   &= \frac{1}{4}\int_{-\infty}^{+\infty} \texttt{V}_\theta^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2 + (1-2\theta)(\texttt{U}^{n+1}-\texttt{U}^n)^2\right) \\
+   &= \frac{1}{4}\int_{-\infty}^{+\infty} \texttt{V}_\theta^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right) + \frac{1-2\theta}{4}\int_{-\infty}^{+\infty}\texttt{V}_\theta^n(\texttt{U}^{n+1}-\texttt{U}^n)^2 \\
+\end{split}
+\end{equation*}
+Et, en développant le premier terme de la dernière ligne, 
+\begin{equation*}
+\begin{split}
+  \frac{1}{4}\int_{-\infty}^{+\infty} \texttt{V}_\theta^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right) 
+   &= \frac{1}{4}\int_{-\infty}^{+\infty} (\theta(\texttt{U}^{n+1}+\texttt{U}^{n}) + (1-2\theta)\texttt{U}^n) \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right)  \\
+   &= \frac{\theta}{4}\int_{-\infty}^{+\infty} (\texttt{U}^{n+1}+\texttt{U}^{n})\left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right) + \frac{1-2\theta}{4}\int_{-\infty}^{+\infty}\texttt{U}^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right)  \\
+\end{split}
+\end{equation*}
+Par ailleurs, l'identité $3(a+b)(a^2-b^2) = 4(a^3 -b^3) - (a-b)^3$ nous donne
+\begin{equation*}
+\begin{split}
+    \frac{\theta}{4}\int_{-\infty}^{+\infty} (\texttt{U}^{n+1}+\texttt{U}^{n})\left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right)
+   &=2\theta\int_{-\infty}^{+\infty} \frac{(\texttt{U}^{n+1})^3}{6}-\frac{(\texttt{U}^n)^3}{6} + \frac{\theta}{2}\int_{-\infty}^{+\infty}\frac{(\texttt{U}^{n+1} - \texttt{U}^n)^3}{6} \\
+\end{split}
+\end{equation*}
+Ce qui donne donc
+\begin{equation}\label{energy_theta_dem3}
+\begin{split}
+  \frac{1}{4}\int_{-\infty}^{+\infty} \texttt{V}_\theta^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right) 
+   &=2\theta\int_{-\infty}^{+\infty} \frac{(\texttt{U}^{n+1})^3}{6}-\frac{(\texttt{U}^n)^3}{6} + \frac{\theta}{2}\int_{-\infty}^{+\infty}\frac{(\texttt{U}^{n+1} - \texttt{U}^n)^3}{6} \\
+   &~~~~+ \frac{1-2\theta}{4}\int_{-\infty}^{+\infty}\texttt{U}^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right)  \\
+\end{split}
+\end{equation}
+En combinant (\ref{energy_theta_dem1}), (\ref{energy_theta_dem2}) et (\ref{energy_theta_dem3}) on parvient finalement à la relation
+\begin{equation*}
+\begin{aligned}
+    \frac{1}{2}\int_{-\infty}^{+\infty} \texttt{U}^{n+1}\partial_{xx}\texttt{U}^{n+1} &+  \int_{-\infty}^{+\infty}\frac{(\texttt{U}^{n+1})^3}{6} =   \frac{1}{2}\int_{-\infty}^{+\infty}\texttt{U}^{n}\partial_{xx}\texttt{U}^{n}+ \int_{-\infty}^{+\infty} \frac{(\texttt{U}^{n})^3}{6} - \theta \left(\frac{1}{2}\int_{-\infty}^{+\infty}\frac{(\texttt{U}^{n+1} - \texttt{U}^n)^3}{6}\right)\\
+    &+ (1-2\theta)\left(\int_{-\infty}^{+\infty} \frac{(\texttt{U}^{n+1})^3}{6}-\frac{(\texttt{U}^n)^3}{6}  \right) - (1-2\theta)\left(\frac{1}{4}\int_{-\infty}^{+\infty}\texttt{U}^n \left((\texttt{U}^{n+1})^2-(\texttt{U}^n)^2\right) \right) \\
+    &- (1-2\theta)\left(\frac{1}{2}\int_{-\infty}^{+\infty}(\partial_{x}\texttt{U}^{n+1}-\partial_{x}\texttt{U}^n)^2 \right)
+\end{aligned}
+\end{equation*}
+\end{proof}
+
+En particulier, pour $\theta = \frac{1}{2}$, on trouve alors
+\begin{equation*}
+\begin{aligned}
+    \frac{\mathcal{J}(\texttt{U}^{n+1})- \mathcal{J}(\texttt{U}^{n})}{\Delta_t} &= - \frac{(\Delta_t)^2}{24} \int_{-\infty}^{+\infty}\left(\frac{\texttt{U}^{n+1} - \texttt{U}^n}{\Delta_t}\right)^3\\
+\end{aligned}
+\end{equation*}
+
+
+
 \subsubsection{Schéma numérique}
 
 
@@ -1033,6 +1374,157 @@ De manière analogue à (\ref{num_scheme_Airy}), posons $x_j = j\Delta_x$ et $t^
 \begin{equation}
 \frac{\texttt{U}^{n+1}-\texttt{U}^n}{\Delta_t} + B\left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right) + \frac{1}{2}D\left( \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right)^2 \right) = 0 \label{num_scheme_kdv}
 \end{equation}
+Où $B$ et $D$ sont deux opérateurs antisymétriques. Pour tout entier $n$, on supposera que la suite $(U^n_j)_{j\in\mathbb{Z}}$ est sommable (i.e. qu'elle est dans $l^1(\mathbb{Z})$). Par abus de notation, on notera $\langle v,\textbf{1}\rangle$ la somme $\sum_{j\in\mathbb{Z}}v_j$, où \textbf{1} désigne la suite constante égale à 1, indexée par $\mathbb{Z}$ et où $\langle \cdot,\cdot\rangle$ désigne le produit scalaire dans $l^2(\mathbb{Z})$ précédemment défini.
+
+\paragraph{Évolution moyenne de $\texttt{U}^n$}\,\\
+
+Les opérateurs $B$ et $D$ correspondant à une approximation aux sens des différences finies de $\partial_{xxx}$ et $\partial_x$ respectivement, on à les égalités $B\textbf{1} = D\textbf{1} = 0 $. On s'intéresse à l'évolution de la somme $\langle \texttt{U}^n,\textbf{1}\rangle  := \sum_j \texttt{U}_j^n$ lorsque $n$ croît. En sommant sur $j\in\mathbb{Z}$ les coefficients des suites présentes dans l'équation (\ref{num_scheme_kdv}), on obtient la relation suivante:
+
+\begin{equation*}
+    \frac{\langle\texttt{U}^{n+1},\textbf{1},\rangle-\langle\texttt{U}^n,\textbf{1}\rangle}{\Delta_t} + \langle B\left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right),\textbf{1}\rangle + \frac{1}{2}\langle D\left( \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right)^2 \right),\textbf{1}\rangle = 0 .
+\end{equation*}
+
+Par antisymétrie de $B$, 
+
+\begin{equation*}
+    \begin{split}
+        \langle B\left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right),\textbf{1}\rangle  &= -\langle \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right),B\textbf{1}\rangle \\
+        &= -\langle \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right),0\rangle \\
+        &= 0.
+    \end{split}
+\end{equation*}
+De même, par antisymétrie de $D$, 
+\begin{equation*}
+    \begin{split}
+        \langle D\left( \left(\frac{\texttt{U}^{n+1} + \texttt{U}^{n}}{2}\right)^2 \right),\textbf{1}\rangle &= 0.
+    \end{split}
+\end{equation*}
+Il vient alors 
+\begin{equation*}
+    \frac{\langle \texttt{U}^{n+1},\textbf{1},\rangle -\langle \texttt{U}^n,\textbf{1}\rangle }{\Delta_t} = 0 .
+\end{equation*}
+Ainsi, pour tout entier naturel $n$, on a $\langle \texttt{U}^n,\textbf{1}\rangle  = \langle \texttt{U}^0,\textbf{1}\rangle $.
+
+\paragraph{Évolution norme $l^2$ de $\texttt{U}^n$ dans le cas d'un schéma d'ordre 2 de la dérivée pour l'opérateur $D$}\,\\
+
+Pour cette partie, posons comme $D$ l'opérateur suivant:
+\begin{align*}
+        D : l^2(\mathbb{Z}) &\longrightarrow l^2(\mathbb{Z})\\
+        (\texttt{v}_j)_{j\in\mathbb{Z}} &\mapsto \left(\frac{\texttt{v}_{j+1} - \texttt{v}_{j-1} }{2\Delta_x}\right)_{j\in\mathbb{Z}}
+\end{align*}
+On souhaite étudier l'évolution de la norme $l^2$ de $\texttt{U}^n$.  Pour cela on effectue le produit scalaire des termes de l'équation (\ref{num_scheme_kdv}) par $ \texttt{V}^n = \frac{(\texttt{U}^{n+1} + \texttt{U}^{n})}{2} = (v^n_j)_{j\in\mathbb{Z}}$. Ceci donne
+
+\begin{equation*}
+    \frac{\langle \texttt{U}^{n+1} - \texttt{U}^n,\texttt{V}^n\rangle }{\Delta_t} + \langle B\texttt{V}^n,\texttt{V}^n\rangle  + \frac{1}{2}\langle D (\texttt{V}^n)^2 ,\texttt{V}^n\rangle  = 0 .
+\end{equation*}
+Remarquons que $\langle \texttt{U}^{n+1} - \texttt{U}^n,\texttt{V}^n\rangle  = \frac{1}{2}\left(\|\texttt{U}^{n+1}\|^2-\|\texttt{U}^{n}\|^2\right)$. De plus, par antisymétrie de $B$, on sait que $\langle B\texttt{V}^n,\texttt{V}^n\rangle  = 0$. Ces simplifications nous amènent à l'égalité suivante
+\begin{equation*}
+    \frac{\|\texttt{U}^{n+1}\|^2-\|\texttt{U}^{n}\|^2}{\Delta_t} = -\langle D (\texttt{V}^n)^2 ,\texttt{V}^n\rangle  .
+\end{equation*}
+
+Dès lors, prenons compte de la proposition suivante:
+\begin{prop}
+    Soit $\textbf{V} = (v_j)_{j\in\mathbb{V}}$ une suite appartenant à $l^2(\mathbb{Z})$ telle que $\textbf{V}^2:=(v_j^2)_{j\in\mathbb{V}}$ est aussi dans $l^2(\mathbb{Z})$ et soit $D$ l'opérateur précédemment explicité. Alors l'égalité suivante est vérifiée
+    \begin{equation}
+        \langle D \textbf{V}^2 ,\textbf{V}\rangle  = -\frac{(\Delta_x)^2}{6}\langle (\tilde{D}\textbf{V})^3,\textbf{1}\rangle 
+    \end{equation}
+    Où $\tilde{D}$ est définie par $(\tilde{D}\textbf{V})_j = \frac{v_{j+1}-v_j}{\Delta_x}$ et représente une approximation à l'ordre $\mathcal{O}(\Delta_x)$ de l'opérateur $\partial_x$.
+\end{prop}
+\begin{proof}
+    Par antisymétrie de $D$, 
+    $$\langle D \textbf{V}^2 ,\textbf{V}\rangle  = -\langle  \textbf{V}^2 ,D\textbf{V}\rangle $$
+    En développant le terme de droite, on a donc
+    \begin{equation*}
+        \begin{split}
+            \langle D \textbf{V}^2 ,\textbf{V}\rangle  &= -\frac{1}{2\Delta_x}\sum\limits_{j\in\mathbb{Z}}v_j^2(v_{j+1}-v_{j-1})\\
+            &= -\frac{1}{2\Delta_x}\sum\limits_{j\in\mathbb{Z}}v_j^2v_{j+1}-v_j^2v_{j-1}\\
+            &= -\frac{1}{2\Delta_x}\left(\sum\limits_{j\in\mathbb{Z}}v_j^2v_{j+1} - \sum\limits_{j\in\mathbb{Z}}v_j^2v_{j-1}\right) .
+        \end{split}
+    \end{equation*}
+    Si on ré-indexe la somme de droite par le changement de variable $j'  = j-1$, on obtient alors
+    \begin{equation*}
+        \begin{split}
+            \langle D \textbf{V}^2 ,\textbf{V}\rangle  &= -\frac{1}{2\Delta_x}\left(\sum\limits_{j\in\mathbb{Z}}v_j^2v_{j+1} - \sum\limits_{j\in\mathbb{Z}}v_{j+1}^2v_{j}\right)\\
+            &= -\frac{1}{2\Delta_x}\sum\limits_{j\in\mathbb{Z}}(v_j^2v_{j+1} - v_{j+1}^2v_{j})\\
+            &= -\frac{1}{2\Delta_x}\frac{1}{3}\sum\limits_{j\in\mathbb{Z}}(3v_j^2v_{j+1} - 3v_{j+1}^2v_{j}) .\\
+        \end{split}
+    \end{equation*}
+    En partant de la formule du binôme de Newton  $(a-b)^3 = a^3 - 3a^2b + 3ab^2 - b^3$ pour $a = v_{j+1}$ et $b = v_j$, il vient que 
+    $$v_j^2v_{j+1} - v_{j+1}^2v_{j} = \frac{1}{3}\left( (v_{j+1} - v_j)^3 - v_{j+1}^3 + v_j^3\right).$$
+    Et donc
+    \begin{equation*}
+        \begin{split}
+            \langle D \textbf{V}^2 ,\textbf{V}\rangle  &= -\frac{1}{6\Delta_x}\left(\sum\limits_{j\in\mathbb{Z}}(v_{j+1} - v_j)^3 - \sum\limits_{j\in\mathbb{Z}}(v_{j+1}^3 - v_j^3)\right) .\\
+        \end{split}
+    \end{equation*}
+
+    Les termes de la somme de droite se télescopent, et $v_j$ tend vers 0 en $+\infty$ et en $-\infty$. Cette somme est donc nulle. Il nous reste donc
+    $$\langle D \textbf{V}^2 ,\textbf{V}\rangle  = -\frac{1}{6\Delta_x}\sum\limits_{j\in\mathbb{Z}}(v_{j+1} - v_j)^3 .$$    
+    Autrement dit,
+    $$\langle D \textbf{V}^2 ,\textbf{V}\rangle  = -\frac{(\Delta_x)^2}{6}\sum\limits_{j\in\mathbb{Z}}\left(\frac{v_{j+1} - v_j}{\Delta_x}\right)^3.$$
+\end{proof}
+
+On est finalement ammené à la relation 
+\begin{equation*}
+    \frac{\|\texttt{U}^{n+1}\|^2-\|\texttt{U}^{n}\|^2}{\Delta_t} = (\Delta_x)^2\frac{1}{6}\langle (\Tilde{D}\texttt{V}^n)^3 ,\texttt{1}\rangle  .
+\end{equation*}
+Ainsi, en assumant une certaine hypothèse de modération de la pente de $u$, ce qui est envisageable si on étudie de faibles longueurs d'onde, le terme  $(\Delta_x)^2\frac{1}{12}\langle (\Tilde{D}\texttt{V}^n)^3 ,\texttt{1}\rangle  $ peut être considéré comme égal à $\mathcal{O}((\Delta_x)^2)$. Ce qui nous amène à 
+\begin{equation*}
+    \frac{\|\texttt{U}^{n+1}\|^2-\|\texttt{U}^{n}\|^2}{\Delta_t} = \mathcal{O}((\Delta_x)^2).
+\end{equation*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{graphs/OrdredenormeL2enfonctiondedx.pdf}
+    \caption{Comparaison entre la norme $L^2$ de U simulé au temps t = 0.1 et la norme $L^2$ de U au temps 0 pour $\Delta_t = 10^{-3}$ pour plusieurs valeurs de $\Delta_x$ }
+    \label{fig:enter-label}
+\end{figure}
+\paragraph{Évolution de l'énergie globale du système}
+\begin{prop}
+    Supposons qu'il existe un opérateur linéaire auto-adjoint $L$, telle que  $B = DL$, posons $\textbf{J}$ la fonctionnelle quadratique suivante
+    \begin{align*}
+        \textbf{J} : \texttt{U} &\mapsto \frac{1}{2}\langle \texttt{U},L\texttt{U} \rangle + \frac{1}{6}\langle \texttt{U}^3,\textbf{1} \rangle
+\end{align*}
+    Alors pour tout entier $n$, 
+    \begin{equation*}
+        \begin{aligned}
+        \frac{\textbf{J}(\texttt{U}^{n+1}) -\textbf{J}(\texttt{U}^{n})}{\Delta_t} & = - \frac{(\Delta_t)^2}{24}\langle\left(\frac{\texttt{U}^{n+1} - \texttt{U}^{n}}{\Delta_t}\right)^3, \textbf{1}\rangle \\
+        \end{aligned}
+    \end{equation*}
+\end{prop}
+\begin{proof}
+    \begin{align*}
+        \langle \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} , L\texttt{V}^n \rangle &= -\langle DL\texttt{V}^n, L\texttt{V}^n \rangle -\frac{1}{2}\langle DU^2, L\texttt{V}^n \rangle \\
+        & = -\frac{1}{2} \langle D(\texttt{V}^n)^2, L\texttt{V}^n \rangle \\
+        & = \frac{1}{2}\langle (\texttt{V}^n)^2, DL\texttt{V}^n \rangle \\
+        & = -\frac{1}{2}\langle (\texttt{V}^n)^2,  \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} + (D\texttt{V}^n)^2 \rangle \\
+        & = -\frac{1}{2}\langle (\texttt{V}^n)^2, \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} \rangle - \frac{1}{2}\langle (\texttt{V}^n)^2,  D(\texttt{V}^n)^2 \rangle \\
+        & = -\frac{1}{2}\langle (\texttt{V}^n)^2, \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} \rangle\\
+        & = -\frac{1}{8\Delta_t}\sum (\texttt{U}^{n+1} +\texttt{U}^{n} )^2(\texttt{U}^{n+1}-\texttt{U}^{n}) \\
+    \end{align*}
+    Par ailleurs, l'identité $3(a+b)^2(a-b) = 4(a^3 -b^3) - (a-b)^3$ nous donne
+    \begin{equation}\label{energy_num_dem1}
+        \begin{aligned}
+        \langle \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} , L\texttt{V}^n \rangle& = -\frac{1}{8\Delta_t}\sum \frac{4}{3}((\texttt{U}^{n+1})^3 - (\texttt{U}^{n})^3) + - \frac{1}{3}(\texttt{U}^{n+1} - \texttt{U}^{n})^3\\
+        & = -\frac{1}{\Delta_t} \left(\frac{1}{6}\langle D(\texttt{U}^{n+1})^3, \textbf{1}\rangle - \frac{1}{6}\langle D(\texttt{U}^{n})^3, \textbf{1}\rangle\right) - \frac{(\Delta_t)^2}{24}\langle\left(\frac{\texttt{U}^{n+1} - \texttt{U}^{n}}{\Delta_t}\right)^3, \textbf{1}\rangle\\
+        \end{aligned}
+    \end{equation}
+    De plus, en développant le terme $\langle \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} , L\texttt{V}^n \rangle$ , il vient l'égalité suivante
+    \begin{align*}
+        \langle \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} , L\texttt{V}^n \rangle& = \frac{1}{2\Delta_t}\langle \texttt{U}^{n+1}-\texttt{U}^{n}  ,L\texttt{U}^{n+1}+L\texttt{U}^{n} \rangle\\
+        & = \frac{1}{2\Delta_t}\left(\langle \texttt{U}^{n+1}   ,L\texttt{U}^{n+1} \rangle - \langle \texttt{U}^{n}  ,L\texttt{U}^{n} \rangle + \langle \texttt{U}^{n+1} ,L\texttt{U}^{n} \rangle - \langle \texttt{U}^{n}  ,L\texttt{U}^{n+1} \rangle\right)\\
+    \end{align*}
+    L'opérateur $L$ étant auto-adjoint, on a $\langle \texttt{U}^{n+1} ,L\texttt{U}^{n} \rangle - \langle \texttt{U}^{n}  ,L\texttt{U}^{n+1} \rangle = 0$, et donc 
+    \begin{equation}\label{energy_num_dem2}
+        \begin{aligned}
+            \langle \frac{\texttt{U}^{n+1}-\texttt{U}^{n}}{\Delta_t} , L\texttt{V}^n \rangle& = \frac{1}{2\Delta_t}\left(\langle \texttt{U}^{n+1}   ,L\texttt{U}^{n+1} \rangle - \langle \texttt{U}^{n}  ,L\texttt{U}^{n} \rangle\right)\\
+        \end{aligned}
+    \end{equation}
+    En combinant (\ref{energy_num_dem1}) et (\ref{energy_num_dem2}), on trouve alors le résultat voulu.
+    
+    
+\end{proof}
+
 \subsubsection{Les solitons de KdV}
 On cherche des solutions de l'équation de (\ref{KdV}) sous la forme d'ondes voyageuses, qu'on appellera solitons. 
 \begin{prop}
@@ -1046,34 +1538,29 @@ On cherche des solutions de l'équation de (\ref{KdV}) sous la forme d'ondes voy
 \begin{equation*}
     -cg' + g^{(3)} + gg' = 0 
 \end{equation*}
-
 Cette dernière peut aussi s'écrire
 \begin{equation*}
     \left(-cg + g'' + \frac{1}{2}g^2\right)' = 0 
 \end{equation*}
-
 En intégrant, il vient alors que
 \begin{equation*}
-        -cg + g'' + \frac{1}{2}g^2 = k_1
+        -cg + g'' + \frac{1}{2}g^2 = k_1.
 \end{equation*}
-
 Sachant l'hypothèse $(\textbf{H}_9)$, on sait que $k_1$ = 0 . Ce qui nous amène à 
 \begin{equation*}
-        -cg + g'' + \frac{1}{2}g^2 = 0
+        -cg + g'' + \frac{1}{2}g^2 = 0.
 \end{equation*}
-
 En multipliant cette équation par $g'$, il vient 
 \begin{equation*}
-        \left(-\frac{c}{2}g^2 + \frac{1}{2}(g')^2 + \frac{1}{6}g^3\right)' = 0
+        \left(-\frac{c}{2}g^2 + \frac{1}{2}(g')^2 + \frac{1}{6}g^3\right)' = 0.
 \end{equation*}
-
 En intégrant, et en considérant à nouveau l'hypothèse $(\textbf{H}_9)$, on obtient
 \begin{equation*}
-     -cg^2 + (g')^2 + \frac{1}{3}g^3 = 0
+     -cg^2 + (g')^2 + \frac{1}{3}g^3 = 0.
 \end{equation*}
 \end{proof}
 
-\cite{Garnier} et \cite{MT} proposent une astuce pour trouver une solution à cette équation. Elle revient à considérer la fonction transcendante élémentaire $\text{ch}(x) = \frac{e^x+ e^{-x}}{2}$ et de chercher $g$ sous la forme 
+Une astuce pour trouver une solution à cette équation, que l'on retrouve par exemple dans \textsc{Garnier}\cite{Garnier} et dans \textsc{Miranville Temam\cite{MT}}, revient à considérer la fonction transcendante élémentaire $\text{ch}(x) = \frac{e^x+ e^{-x}}{2}$ et de chercher $g$ sous la forme 
 
 \begin{equation*}
      g(x) = \lambda\text{ch}^{\omega}(\kappa x)
@@ -1112,6 +1599,118 @@ En résumé, une solution au problème (\ref{eq_soliton}) est
 \begin{equation}
     u(x,t) = \frac{3c}{\text{ch}^2\left( \frac{\sqrt{c}}{2}(x-ct)\right)}
 \end{equation}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\linewidth]{graphs/Soliton_t0.pdf}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}
+  \centering
+  \includegraphics[width=0.45\linewidth]{graphs/Soliton_t1.pdf}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{Simulation du soliton pour c = 1.} 
+\end{figure}
+
+
+\newpage
+\section{Phénomènes d'amortissements}
+
+
+La plupart des équations présentées et étudiées plus tôt dans ce mémoire conservent la norme $L^2$ de la hauteur du fluide. Cependant, dans les expériences réelles, il y a un phénomène dit d'amortissement qui se traduit par une diminution cette norme. Dans cette partie nous verrons comment représenter cet amortissement par l'ajout d'un nouveau terme, noté $\mathcal{L}(u)$ dans ces équations. Prenons pour exemple l'équation suivante
+
+\begin{equation}
+    \partial_t u + \mathcal{G}(u) = 0
+\end{equation}
+avec par exemple  $\mathcal{G}(u) = \partial_{xxx}u$ pour (\ref{Airy}) où encore $\mathcal{G}(u) = \partial_{xxx}u + \frac{1}{2}\partial_x(u^2)$ pour (\ref{KdV}). 
+
+Par cette équation il vient que
+\begin{equation*}
+    \begin{split}
+        \partial_t\|u\|^2_{L^2}  &= \partial_t\int u^2\\
+        &= 2\int u\partial_tu\\
+        &= -2\int u\mathcal{G}(u)\\
+    \end{split}
+\end{equation*}
+La conservation de la norme $L^2$ de $u$ par cette équation se caractérise donc par la propriété
+\begin{equation}
+    \int u\mathcal{G}(u) = 0.
+\end{equation}
+Supposons cette propriété vérifiée pour $\mathcal{G}$ et ajoutons maintenant un terme $\mathcal{L}(u)$ à cette équation, de sorte que 
+\begin{equation*}
+    \partial_t u + \mathcal{G}(u) + \mathcal{L}(u)= 0 .
+\end{equation*}
+Il vient alors
+\begin{equation*}
+     \partial_t\|u\|^2_{L^2}  = -2\int u\mathcal{L}(u).
+\end{equation*}
+La condition de décroissance de la norme $L^2$ de $u$ recherchée se caractérise alors par la propriété
+\begin{equation}
+    \int u\mathcal{L}(u) \geq 0.
+\end{equation}
+\subsection{Les équations de KdV amortie}
+
+\section{Méthodes d'approximaton de symbol (SAM)}
+Supposons travailler sur une matrice $A$ dont on ne connaît pas les coefficients. Supposons ne disposer que d'une liste $(\textbf{V}^k, A\textbf{V}^k)$ où $(\textbf{V}_k)$ est une famille finie de vecteurs de $\mathbb{R}^n$. La partie qui va suivre consiste à chercher, avec le moins de calculs possible, une approximation des valeurs propres de la matrice $A$.
+
+\subsection{Méthodes stochastiques pour l'approximation de la trace d'une matrice}
+Posons $\textbf{V}= (v_1,\cdots,v_n)$ est un vecteur aléatoire et supposons disposer de $(\textbf{V}^k)_{k\in\mathbb{N}}$ une suite de vecteurs aléatoires $i.i.d.$ de même loi que $\textbf{V}$.
+
+\subsubsection{Cas général}
+\begin{prop} \label{Hutchinson} \text{(voir \textsc{Hutchinson\cite{Hutchinson}})}
+    Si $\textbf{V}= (v_1,\cdots,v_n)$ est un vecteur aléatoire et $A\in\mathcal{M}_n(\mathbb{R})$, alors
+    
+    $$\mathbb{E}\left(\langle A\textbf{V},\textbf{V}\rangle \right) = tr(A\textbf{Cov}(\textbf{V})) + \langle \mathbb{E}(A\textbf{V}),  \mathbb{E}(\textbf{V})\rangle$$
+
+    où $\textbf{Cov}(\textbf{V})$ désigne la matrice de covariance de $\textbf{V}$.
+
+    
+    
+\end{prop}
+\begin{proof} Par linéarité
+    \begin{align*}
+        \mathbb{E}\left(\langle A\textbf{V},\textbf{V}\rangle \right) 
+        &= \mathbb{E}\left(\sum_{i = 0}^n v_i\sum_{j = 0}^na_{ij}v_j\right) \\
+        &= \mathbb{E}\left(\sum_{i , j= 0}^na_{ij}v_iv_j\right)\\
+        &= \sum_{i , j= 0}^na_{ij}\mathbb{E}\left(v_iv_j\right)\\
+        &=  \sum_{i , j= 0}^na_{ij}\left(\text{Cov}(v_i,v_j) + \mathbb{E}(v_i)\mathbb{E}(v_j)\right)\\
+        &=  tr(A\textbf{Cov}(\textbf{V})^T) + \langle A\mathbb{E}(\textbf{V}), \mathbb{E}(\textbf{V})\rangle\\
+        &=  tr(A\textbf{Cov}(\textbf{V})) + \langle \mathbb{E}(A\textbf{V}), \mathbb{E}(\textbf{V})\rangle
+    \end{align*}
+\end{proof}
+En ajoutant une première hypothèse d'indépendance on aboutit à une première méthode stochastique d'approximation de la trace:
+\begin{prop}
+    Si $\textbf{V}= (v_1,\cdots,v_n)$ est un vecteur aléatoire d'espérance nulle. Si les composantes $v_1, \cdots, v_n$ sont linéairement indépendantes (i.e. si $\textbf{Cov}(\textbf{V})$ est inversible), alors il existe $P$ une matrice orthogonale et $D$ une matrice diagonale positive telle que
+    $$\mathbb{E}(\langle \textbf{Cov}(\textbf{V})^{-1}A\textbf{V},\textbf{V}\rangle)- \langle \textbf{Cov}(\textbf{V})^{-1}\mathbb{E}(A\textbf{V}), \mathbb{E}(\textbf{V})\rangle=tr(A) $$
+    
+\end{prop}
+\begin{proof}
+    D'apres la proposition \ref{Hutchinson}, on a alors pour toute matrice $B$, 
+    \begin{align*}
+        \mathbb{E}(\langle B\textbf{V},\textbf{V}\rangle)&=tr(B\textbf{Cov}(\textbf{V})) + \langle \mathbb{E}(B\textbf{V}), \mathbb{E}(\textbf{V})\rangle\\
+        &=tr(\textbf{Cov}(\textbf{V})B) + \langle \mathbb{E}(B\textbf{V}), \mathbb{E}(\textbf{V})\rangle
+    \end{align*}
+    En posant $B = \textbf{Cov}(\textbf{V})^{-1}A$, on obtient donc
+    $$\mathbb{E}(\langle \textbf{Cov}(\textbf{V})^{-1}A\textbf{V},\textbf{V}\rangle)=tr(A) + \langle \textbf{Cov}(\textbf{V})^{-1}\mathbb{E}(A\textbf{V}), \mathbb{E}(\textbf{V})\rangle$$
+\end{proof}
+\paragraph{Remarque: }En conséquence, par la loi des grands nombres, pour $\textbf{V}^k$ une suite de vecteurs aléatoires $i.i.d$ de même loi que $\textbf{V}$, on aboutit à une première approximation de la trace de A :
+$$\frac{1}{N}\sum_{k=1}^N\langle \textbf{Cov}(\textbf{V})^{-1}(A\textbf{V}^k),\textbf{V}^k\rangle - \frac{1}{N^2}\langle \textbf{Cov}(\textbf{V})^{-1} \left(\sum_{k=1}^NA\textbf{V}^k\right),\sum_{k=1}^N\textbf{V}^k\rangle\underset{N\rightarrow\infty}{\rightarrow}  tr(A)$$
+au sens de la convergence en probabilité.
+
+
+C'est un algorithme très coûteux car cela nécessite, pour un $N$ fixé, d'inverser $N+1$ fois la matrice de taille $n$ qu'est $\textbf{Cov}(\textbf{V})$. Mais cela se simplifie très grandement lorsque cette matrice est choisie.
+\subsubsection{Cas de l'indépendance mutuelle}
+Si les composantes $v_1, \cdots, v_n$ sont d'espérances nulles, indépendantes et de mêmes variances $\sigma^2$, alors $\textbf{Cov}(\textbf{V}) = \sigma^2I_n$ et la proposition \ref{Hutchinson} donne alors
+    $$\mathbb{E}\left(\langle A\textbf{V},\textbf{V}\rangle \right) = \sigma^2tr(A)$$
+Ainsi, d'après la loi des grands nombres, pour $\textbf{V}^k$ une suite de vecteurs aléatoires $i.i.d$ de même loi que $\textbf{V}$, il vient que
+$$\frac{1}{N}\sum_{k=1}^N\langle A\textbf{V}^k,\textbf{V}^k\rangle  \underset{N\rightarrow\infty}{\rightarrow} \sigma ^2 tr(A)$$
+au sens de la convergence en probabilité. Et comme $\textbf{V}^k = I_n\cdot \textbf{V}^k$ on a aussi
+$$\frac{1}{N}\sum_{k=1}^N\langle \textbf{V}^k,\textbf{V}^k\rangle  \underset{N\rightarrow\infty}{\rightarrow} \sigma ^2 tr(I_n) = \sigma^2 N$$
+Ce qui nous donne alors
+$$\frac{\sum_{k=1}^N\langle A\textbf{V}^k,\textbf{V}^k\rangle }{\sum_{k=1}^N\langle \textbf{V}^k,\textbf{V}^k\rangle }\underset{N\rightarrow\infty}{\rightarrow} \frac{tr(A)}{N}$$
 \newpage
 \nocite{MT}
 \nocite{Lannes}
