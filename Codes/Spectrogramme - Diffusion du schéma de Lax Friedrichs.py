@@ -25,7 +25,7 @@ def u5(x):
         U += np.sin(i*x)
     return U
 def u_init(x):
-    return u5(x)
+    return u2(x)
 def getabsfftU(U,N):
     # return np.abs(fft(np.roll(U,1)+U)/N/np.pi)[:N//2]
     return np.abs(fft(U)/N/np.pi)[:N//2]

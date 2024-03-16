@@ -55,12 +55,6 @@ theta = 0.5
 Mat = I + dt*theta*B
 
 """Placement initial des fenètres"""
-plt.figure(0)
-plt.get_current_fig_manager().window.setGeometry(30,30,500,500)
-plt.figure(1)
-plt.get_current_fig_manager().window.setGeometry(30,560,500,500)
-plt.figure(2)
-plt.get_current_fig_manager().window.setGeometry(560,30,870,700)
 """Execution de la boucle"""
 while t<T:
     """Affichage de U au temps t"""
@@ -73,7 +67,7 @@ while t<T:
     plt.title("U(x,t) au temps t = "+str(round(t,2)))
     plt.xlabel("x")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
     
     
@@ -108,7 +102,7 @@ while t<T:
     plt.plot(xfreq[:N//2], np.abs(y[:N//2]),"k", label= "|Û|")
     plt.xlabel("$\\xi $")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
     
     # Le module de Û ne varie pas, mais on distingue toute de même une variation de arg(Û) au cour du temps.
@@ -121,7 +115,7 @@ while t<T:
     plt.plot(xfreq[1:N//10], 2*c*(0*xfreq[1:N//10]+1), "g--", label = "vitesse théorique du soliton rapide" )
     plt.xlabel("$\\xi $")
     plt.legend()
-    plt.show()
+    plt.show(block = False)
     plt.pause(0.001)
     
     """Actualisation de U et de t"""

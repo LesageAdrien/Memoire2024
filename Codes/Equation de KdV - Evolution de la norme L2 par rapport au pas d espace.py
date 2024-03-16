@@ -25,12 +25,9 @@ length = 2
 a = -length * np.pi
 b = length * np.pi
 
-def soliton(c,xi):
-    return 3*c/(1 + np.sinh(0.5*np.sqrt(c)*xi)**2)
 
 def u_init(x):
-    return soliton(1, x)
-    #return 6 * np.exp(-30 * (x) ** 2) + 6
+    return 6 * np.exp(-30 * (x) ** 2) + 6
 
 def get_L2_growth(N, dt, T):
     t = 0
@@ -80,7 +77,7 @@ plt.loglog(1/N_list, L_list, "bo-", label="$\\|U^n\\|^2_{L^2} - \\|U^0\\|^2_{L^2
 plt.loglog(1/N_list, L_list[0]*(N_list[0]/N_list)**2, "k--", label="$\\mathcal{O}((\\Delta_x)^2)$")
 plt.xlabel("$\Delta_x$")
 plt.legend()
-plt.show()
+plt.show(block = True)
 
 
 

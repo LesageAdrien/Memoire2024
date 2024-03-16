@@ -85,11 +85,11 @@ while t < T:
     res = 1
     Uk = np.copy(U)
     i = 1
-    while res > 1e-6:
+    while res > 1e-8:
         i += 1
         Uknew = sps.linalg.spsolve((alpha + 1) * Mat,
                                    alpha * Mat.dot(Uk) + U - dt * (1 - theta) * B.dot(U) - 0.5 * dt * D.dot(
-                                       (Uk + U) ** 2 / 4))  # Formulation Crank Nichloson + itération de picard
+                                       (Uk + U) ** 2 / 4))  # Formulation Sanz Serna + itération de picard
         res = np.linalg.norm(Uk - Uknew) * np.sqrt(h)
         Uk = np.copy(Uknew)
 

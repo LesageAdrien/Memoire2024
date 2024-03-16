@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import scipy.sparse as sps
 from scipy.fft import fft, fftfreq
 from scipy.interpolate import splev, splrep
-# plt.close("all")
+plt.close("all")
 
 def sproll(M,k=1):
     return sps.hstack((M[:,k:], M[:,:k]), format = "csr", dtype = float)
@@ -13,12 +13,6 @@ def L_mat(N,h):
     return (2*sproll(I,0) - sproll(I,1) - sproll(I,-1))/h**2
 
 """Données relative à la discrétisation du Tore"""
-# a = 0; b = 2*np.pi
-# v2N = 11
-# N = 2**v2N
-# X, h = np.linspace(a,b,N, endpoint=False, retstep = True)
-
-
 """Construction des matrices intervenant dans la boucle"""
 # def resize1D(V, newsize):
 #     Vsize = len(V)
@@ -41,39 +35,69 @@ def resize1Dperiodic2(V, newsize):
     return newV
 
 
-def getMoy(N, si, dt = 1e-7, T = 1e-6):
+def crossover1(vec1, vec2, n, N):
+    result = 0
+    for k in range(n):
+        a = int(k/n*N)
+        l = k/n*N-a
+        if (a+1)<N:
+            result += (1-l)*vec1[a]*vec2[a] + l*vec1[a+1]*vec2[a+1] 
+        else:
+            result += vec1[a]*vec2[a]
+    return result
+def crossover2(vec1, vec2, n, N):
+    return N/n*vec1.dot(vec2)
+def crossover3(vec1, vec2, n, N):
+    index = np.linspace(0, N, n, endpoint = False).astype(int)
+    return vec1[index].dot(vec2[index])
+def crossover4(vec1, vec2, n, N):
+    index = (np.linspace(0, N, n, endpoint = False)+N/n * np.random.random()).astype(int)
+    return vec1[index].dot(vec2[index])
+def crossover(vec1, vec2, n, N):
+    return crossover2(vec1, vec2, n, N)
+
+
+def getMoy(N, nf, dt = 1e-7, T = 1e-6):
     L = L_mat(N,2*np.pi/N)
     sA = 0
     s = 0
     for i in range(200):
         t = 0
-        Winit = resize1Dperiodic2(1 - 2*(np.random.random(int(N/2**si))<0.5).astype(float), N)
+        Winit = resize1Dperiodic2(1 - 2*(np.random.random(nf)<0.5).astype(float), N)
         W = np.copy(Winit)
         while t < T:
             t += dt
             W -= dt * L.dot(W)
-            # plt.figure(0)
-            # plt.clf()
-            # plt.plot(W)
-            # plt.show()
-            # plt.pause(0.01)
-        if si == 0:
-            sA += W.dot(-(W-Winit)/T)
-            s += W.dot(W)
-        else:
-            sA += W[::si].dot(-(W-Winit)[::si]/T)
-            s += W[::si].dot(W[::si])
-    print("si = "+str(si)+" ... done")
+        sA += crossover(W,-(W-Winit)/T,nf,N)
+        s += crossover(W,W,nf,N)
+    print("nf = "+str(nf)+" ... done")
     return sA/s
 def getC(F,M):
     return np.hstack(( M[0],  ( M[1:]*F[1:] - M[:-1]*F[:-1] )/( F[1:]-F[:-1] ) ))
 
-v2N = 11
-N = 2**v2N
+
+
+def getprodsfromlist(L):
+    results = []
+    for line in np.unpackbits(np.arange(2**len(L), dtype = np.uint8)).reshape((2**len(L),8))[:,3:][:,::-1].astype(bool):
+        print(line)
+        prod = 1
+        for i,b in enumerate(line):
+            print(b)
+            if b:
+                prod*=L[i]
+        results.append(prod)
+    return np.sort(np.unique(np.array(results)))
+
+
+P = [3,5,7,11]
+N = np.prod(P)*2
+F = getprodsfromlist(P)[4:]
 h = 2*np.pi/N
-S = (np.arange(v2N))[:-2][::-1]
-F = (0.5*N/(2**S)).astype(int)
-M = [getMoy(N, si) for si in S]
+
+#F = np.linspace(0,N/2,9)[1:].astype(int)
+#F = np.logspace(4,10,6,  base = 2, endpoint = True).astype(int)
+M = [getMoy(N, 2*nf) for nf in F]
 C = getC(F, M)
 
 xi = np.arange(N//2)

@@ -65,5 +65,5 @@ plt.colorbar()
 plt.title("$|\\hat{u}(\\xi,t)|$")
 plt.ylabel("t")
 plt.xlabel("$\\xi$")
-plt.show(block = False)
+plt.show(block = True)
     
